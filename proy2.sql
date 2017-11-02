@@ -44,10 +44,10 @@ CREATE TABLE proy2.equipos
 	codigo_equipo	char(3),
 	nombre_pais_del_equipo char(40),
 	condigo_confederacionFut char(3),
-	nombres_jugadores char(100),
+	nombres_jugadores varray(12) of char(15),		--insert into table values(, nombres_jugadores('',''))
 	nombre_entrenador char(15),
-	nombre_asistentes char(15),
-	nombre_federativo char(15),
+	nombre_asistentes char(100),		--s
+	nombre_federativo char(15),			--
 	grupo_inicial int,	--8 grupos de 4 equipos
 	primary key(codigo_equipo)
 	)
@@ -83,7 +83,7 @@ CREATE TABLE proy2.asistentes
 	apellido_1_asistente char(15),
 	apellido_2_asistente char(15),
 	pais_nacionalidad_asistente char(40),
-	tipo_asistente char(20), --T閏nico, Preparador F韘ico, M閐ico, Psic髄ogo, Nutricionista,administrativo, delegado de equipo
+	tipo_asistente char(20), --T茅cnico, Preparador F铆sico, M茅dico, Psic贸logo, Nutricionista,administrativo, delegado de equipo
 	fecha_nacimiento_asistente date,
 	fecha_inicio_asistente date,
 	primary key(numero_pasaporte_asistente)
@@ -149,11 +149,12 @@ CREATE TABLE proy2.arbitros
 	)
 ----
 INSERT INTO proy2.confederacionesFutbol
-VALUES('Concacaf', 'Confederaci髇 Centroamericana y del Caribe de F鷗bol'),
-('UEFA', 'Uni髇 Europea de F鷗bol Asociado'),
-('Conmebol', 'Confederaci髇 Sudamericana de F鷗bol'),
-('CAF', 'Confederaci髇 de f鷗bol de Africa'),
-('AFC', 'Confederaci髇 de f鷗bol de Asia'),
-('OFC', 'Confederaci髇 de f鷗bol de Ocean韆')
+VALUES('Concacaf', 'Confederaci贸n Centroamericana y del Caribe de F煤tbol'),
+('UEFA', 'Uni贸n Europea de F煤tbol Asociado'),
+('Conmebol', 'Confederaci贸n Sudamericana de F煤tbol'),
+('CAF', 'Confederaci贸n de f煤tbol de Africa'),
+('AFC', 'Confederaci贸n de f煤tbol de Asia'),
+('OFC', 'Confederaci贸n de f煤tbol de Ocean铆a')
 INSERT INTO proy2.jugadores
-VALUES()
+VALUES(12, nombres_jugadores('','','',''))
+
