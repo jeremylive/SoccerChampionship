@@ -4,10 +4,10 @@ package proyecto2;
  *
  * @author live
  */
-public class crudEquipo extends javax.swing.JFrame 
+public class crudPartido extends javax.swing.JFrame 
 {
 
-    public crudEquipo() 
+    public crudPartido() 
     {
         initComponents();
     }

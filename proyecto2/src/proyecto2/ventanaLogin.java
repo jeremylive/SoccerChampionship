@@ -5,6 +5,8 @@
  */
 package proyecto2;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author live
@@ -81,6 +83,11 @@ public class ventanaLogin extends javax.swing.JFrame {
         salir.setBackground(new java.awt.Color(255, 102, 102));
         salir.setFont(new java.awt.Font("MS UI Gothic", 1, 12)); // NOI18N
         salir.setText("SALIR");
+        salir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                salirActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -141,6 +148,29 @@ public class ventanaLogin extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        
+        //Establesco conexion
+        //Conexion.setcuenta(jTextField1.getText(), jTextField2.getText());
+        //Conexion.getConexion();
+        //Conexion.setContacto();
+        
+        //Si es estable entonces abra la ventana registro
+        //if(Conexion.getstatus())
+        if(true)
+        {                    
+            ventanaPrincipal interfaz2 = new ventanaPrincipal();
+            
+            interfaz2.setLocationRelativeTo(null);
+            interfaz2.setVisible(true);     
+        }else {
+            JOptionPane.showMessageDialog(null, "¡¡¡Usuario Inconrrecto!!!","¡¡¡Error!!!",JOptionPane.ERROR_MESSAGE);
+            
+            jTextField1.setText("");
+            jTextField2.setText("");
+        }
+        
+        
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
@@ -155,6 +185,12 @@ public class ventanaLogin extends javax.swing.JFrame {
         // TODO add your handling code here:
         jTextField1.setText("");
     }//GEN-LAST:event_jTextField1MouseClicked
+
+    private void salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirActionPerformed
+        // TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_salirActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;

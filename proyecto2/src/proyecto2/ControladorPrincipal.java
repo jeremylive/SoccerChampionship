@@ -3,17 +3,15 @@ package proyecto2;
 public class ControladorPrincipal 
 {
     //Variables globales
-    ventanaPrincipal controlador1 = new ventanaPrincipal();
+    ventanaPrincipal interfaz = new ventanaPrincipal();
     String option;
+    
     //Constructor
     public ControladorPrincipal()
     {
-        option = controlador1.getOpciones().getSelectedItem().toString();
+        option = interfaz.getOpciones();
     }
-    
-    //Gets y sets
-    
-    
+        
     //Funciones
     public void logicaVentanaPrincipal()
     {
