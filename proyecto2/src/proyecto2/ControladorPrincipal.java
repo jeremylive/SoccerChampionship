@@ -19,6 +19,9 @@ public class ControladorPrincipal
         //Menu de control para las opciones deisponibles
         switch(option){
             case "EQUIPOS PARTICIPANTES POR CONFEDERACIÓN":  
+                
+                
+                
                 break;
             case "INFORME OFICIAL DEL PARTIDO":
                 break;
