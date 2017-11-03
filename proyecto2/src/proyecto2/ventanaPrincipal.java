@@ -10,16 +10,17 @@ import javax.swing.JComboBox;
 public class ventanaPrincipal extends javax.swing.JFrame 
 {
     //Variables globales
-    ControladorPrincipal controlador = new ControladorPrincipal();
+    ControladorPrincipal controlador;
     
     //Constructor
-    public ventanaPrincipal() 
+    public ventanaPrincipal(ControladorPrincipal control) 
     {
         initComponents();
         backGro back = new backGro();
         this.add(back, BorderLayout.CENTER);
-        this.pack();
+        this.pack();  
         
+        this.controlador = control;
     }
     
     //Funciones

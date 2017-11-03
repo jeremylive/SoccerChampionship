@@ -36,11 +36,6 @@ public class Conexion
         this.status = false;
     }  
     /**
-     * ########################################################################
-     * Funciones
-     * ########################################################################
-     */
-    /**
      * Gets and sets
      */
     public static String getName()
@@ -61,30 +56,35 @@ public class Conexion
     {
         this.contacto = conexion;
     }
+    /**
+     * ########################################################################
+     * Funciones
+     * ########################################################################
+     */
     
+    //Establezco conexión de ORACLE
     public Conexion Conectar()
     {
         try{
-        Class.forName("oracle.jdbc.OracleDriver");
-        String BaseDeDatos = "jdbc:oracle:thin:@//172.19.32.101:1521/grupo07.basedatos";
-        contacto= DriverManager.getConnection(BaseDeDatos,"JLIVE","JLIVE");
-        if(contacto!=null)
-        {
-        System.out.println("Conexion exitosa a esquema JLIVE");
+            
+            Class.forName("oracle.jdbc.OracleDriver");
+            String BaseDeDatos = "jdbc:oracle:thin:@//172.19.32.101:1521/grupo07.basedatos";
+            contacto = DriverManager.getConnection(BaseDeDatos,getName(),getPass());
+        
+            if(contacto != null)
+            {
+                this.status = true;               
+                System.out.println("Conexion exitosa a esquema JLIVE");
+            } else {
+                System.out.println("Conexion fallida a JLIVE");
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
         }
-        else{System.out.println("Conexion fallida a JLIVE");}
-        }
-        catch(Exception e)
-        {e.printStackTrace();}
-      
+        
         return this;
     }
-    
-    public static void main(String[] args) {
-        Conexion conexion = new Conexion();
-        conexion.Conectar();
-    }
- 
+     
     /**
      * Seteo el nuevo usuario y la nueva contraseña a evaluar
      * @param usuario
@@ -104,4 +104,12 @@ public class Conexion
     {
         return  status;
     }
+    
+    //Main
+    public static void main(String[] args) {
+        Conexion conexion = new Conexion();
+        conexion.Conectar();
+    }
+    
+    //Fin de la clase conexión
 }
