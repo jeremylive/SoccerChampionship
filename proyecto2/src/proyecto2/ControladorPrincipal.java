@@ -7,6 +7,18 @@ public class ControladorPrincipal
     //Variables globales
     private String option;
     private int contadorPrincipal;
+    //Variables de PartidoCRUD
+    private String equipo_1;
+    private String equipo_2;
+    private String nombre_estadio;
+    private String fecha_partido;
+    private String hora_partido;
+    private String cantidad_aficionados;
+    private String primerTiempoRepMin;
+    private String segundoTiempoRepMin;
+    private String tiempoExtra;
+    private String tieraronPenales;
+    
 
     
     //Constructor
@@ -27,6 +39,11 @@ public class ControladorPrincipal
         return this.option;
     }
     
+    public int getContadorP()
+    {
+        return this.contadorPrincipal;
+    }
+    
     public void aumentarContador()
     {
         this.contadorPrincipal++;
@@ -34,48 +51,70 @@ public class ControladorPrincipal
     
     //Funciones
     
-    public void sigEquipo(String nombreEstadio, String fecha, String hora, String cantAficionados, String jugadoresSuplentes, String jugadoresTitulares)
+    public void cargarEquipos(String equipo2, String nombreEstadio, String fecha, String hora, String cantAficionados, String jugadoresSuplentes, String jugadoresTitulares, String minPrimerTR, String minSegundoTR)
     {
-        
-        if(!(nombreEstadio.isEmpty() || fecha.isEmpty() || hora.isEmpty() || cantAficionados.isEmpty() || jugadoresSuplentes.isEmpty() || jugadoresTitulares.isEmpty()))
-        {
-            JOptionPane.showMessageDialog(null, "Felicidades toda su información esta correcta.");
-        
-            //LOGIC SIGUIENTE EQUIPO
-            
-            //Agarro toda la informacion 
-            
-            //Valido que este bien la informacion insertada
-            
-            //Coloco el equipo1 donde corresponde
-            
-            //Coloco valores de variables
-            
-            //Hago QUERYS........... SQL
-            
-            //-->inserto informacion a la tablas 
-            //--tabla jugadores titulares
-            
-            //--tabla jugadores suplentes
-            
-            //--....
-            
-            //....
-            
-            //..
-            
-            //Borro los campor en la interfaz 
-        
-        
-        } else {
+        if(getContadorP() == 1)
+            {
+            if(!(equipo2.isEmpty() || nombreEstadio.isEmpty() || fecha.isEmpty() || hora.isEmpty() || cantAficionados.isEmpty() || jugadoresSuplentes.isEmpty() || jugadoresTitulares.isEmpty() || minPrimerTR.isEmpty() || minSegundoTR.isEmpty()))
+            {
+                JOptionPane.showMessageDialog(null, "Felicidades toda su información esta correcta.");
 
-            JOptionPane.showMessageDialog(null, "Algún dato en la información no se inserto. \nPorfavor intentar nuevamente... -.-");
+
+
+            } else {
+                JOptionPane.showMessageDialog(null, "Algún dato en la información no se inserto. \nPorfavor intentar nuevamente... -.-");
+
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "No se ah eligio al EQUIPO 1 \nPorfavor hacer la escogencia... -.-");
+        }
+    }
+    
+    public void sigEquipo(String equipo1, String nombreEstadio, String fecha, String hora, String cantAficionados, String jugadoresSuplentes, String jugadoresTitulares, String minPrimerTR, String minSegundoTR)
+    {
+        if(getContadorP() == 0)
+        {
+            if(!(equipo1.isEmpty() || nombreEstadio.isEmpty() || fecha.isEmpty() || hora.isEmpty() || cantAficionados.isEmpty() || jugadoresSuplentes.isEmpty() || jugadoresTitulares.isEmpty() || minPrimerTR.isEmpty() || minSegundoTR.isEmpty()))
+            {
+                JOptionPane.showMessageDialog(null, "Felicidades toda su información esta correcta.");
+
+                //LOGIC SIGUIENTE EQUIPO
+
+                //Agarro toda la informacion 
+
+                //Valido que este bien la informacion insertada
+
+                //Coloco el equipo1 donde corresponde
+
+                //Coloco valores de variables
+
+                //Hago QUERYS........... SQL
+
+                //-->inserto informacion a la tablas 
+                //--tabla jugadores titulares
+
+                //--tabla jugadores suplentes
+
+                //--....
+
+                //....
+
+                //..
+
+                //Borro los campor en la interfaz 
+
+
+                //Siguiente: equipo2 a seguir escogiendo info....
+                aumentarContador();
+            } else {
+
+                JOptionPane.showMessageDialog(null, "Algún dato en la información no se inserto. \nPorfavor intentar nuevamente... -.-");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Ya se eligio al EQUIPO 1 \nPorfavor darle al boton EjecutarCRUD... -.-");
         }
         
-        
-        //Siguiente: equipo2 a seguir escogiendo info....
-        aumentarContador();
-    }
+    } 
     
     //##----------------------
     
