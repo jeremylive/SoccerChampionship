@@ -455,7 +455,7 @@ public class interfazPartidos extends javax.swing.JFrame
         pack();
     }// </editor-fold>//GEN-END:initComponents
     private void sigEquipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sigEquipoActionPerformed
-        control.sigEquipo(nombreEstadio.getSelectedItem().toString(), fecha.getText(), hora.getText(), cantAficionados.getText());      
+        control.sigEquipo(nombreEstadio.getSelectedItem().toString(), fecha.getText(), hora.getText(), cantAficionados.getText(), jugadoresSuplentes.getText(), jugadoresTitulares.getText());      
     }//GEN-LAST:event_sigEquipoActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed

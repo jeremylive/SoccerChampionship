@@ -34,12 +34,39 @@ public class ControladorPrincipal
     
     //Funciones
     
-    public void sigEquipo()
+    public void sigEquipo(String nombreEstadio, String fecha, String hora, String cantAficionados, String jugadoresSuplentes, String jugadoresTitulares)
     {
         
-        if()
+        if(!(nombreEstadio=="" || fecha=="" || hora=="" || cantAficionados=="" || jugadoresSuplentes=="" || jugadoresTitulares==""))
         {
             JOptionPane.showMessageDialog(null, "Felicidades toda su información esta correcta.");
+        
+            //LOGIC SIGUIENTE EQUIPO
+            
+            //Agarro toda la informacion 
+            
+            //Valido que este bien la informacion insertada
+            
+            //Coloco el equipo1 donde corresponde
+            
+            //Coloco valores de variables
+            
+            //Hago QUERYS........... SQL
+            
+            //-->inserto informacion a la tablas 
+            //--tabla jugadores titulares
+            
+            //--tabla jugadores suplentes
+            
+            //--....
+            
+            //....
+            
+            //..
+            
+            //Borro los campor en la interfaz 
+        
+        
         } else {
 
             JOptionPane.showMessageDialog(null, "Algún dato en la información no se inserto. \nPorfavor intentar nuevamente... -.-");
