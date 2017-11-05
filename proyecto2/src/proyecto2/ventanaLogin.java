@@ -155,10 +155,11 @@ public class ventanaLogin extends javax.swing.JFrame
         
      
         conexion.setcuenta(getJText1(), getJText2());
-        conexion.Conectar();
+        //conexion.Conectar();
 
         //Si es estable entonces abra la APP
-        if(Conexion.getstatus())
+        //if(Conexion.getstatus())
+        if(true)
         {                            
             ventanaPrincipal interfaz2 = new ventanaPrincipal(control);
             interfaz2.setLocationRelativeTo(null);

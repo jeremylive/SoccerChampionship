@@ -37,7 +37,7 @@ public class ControladorPrincipal
     public void sigEquipo(String nombreEstadio, String fecha, String hora, String cantAficionados, String jugadoresSuplentes, String jugadoresTitulares)
     {
         
-        if(!(nombreEstadio=="" || fecha=="" || hora=="" || cantAficionados=="" || jugadoresSuplentes=="" || jugadoresTitulares==""))
+        if(!(nombreEstadio.isEmpty() || fecha.isEmpty() || hora.isEmpty() || cantAficionados.isEmpty() || jugadoresSuplentes.isEmpty() || jugadoresTitulares.isEmpty()))
         {
             JOptionPane.showMessageDialog(null, "Felicidades toda su información esta correcta.");
         
