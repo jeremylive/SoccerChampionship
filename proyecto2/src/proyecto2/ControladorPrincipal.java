@@ -5,12 +5,15 @@ import javax.swing.JOptionPane;
 public class ControladorPrincipal 
 {
     //Variables globales
-    String option;
+    private String option;
+    private int contadorPrincipal;
+
     
     //Constructor
     public ControladorPrincipal()
     {
-        option = "";
+        this.option = "";
+        this.contadorPrincipal = 0;
     }
         
     //Gets and Sets
@@ -19,19 +22,50 @@ public class ControladorPrincipal
         this.option = opcion;
     }
     
+    public String getOption()
+    {
+        return this.option;
+    }
+    
+    public void aumentarContador()
+    {
+        this.contadorPrincipal++;
+    }
+    
     //Funciones
+    
+    public void sigEquipo()
+    {
+        
+        if()
+        {
+            JOptionPane.showMessageDialog(null, "Felicidades toda su información esta correcta.");
+        } else {
+
+            JOptionPane.showMessageDialog(null, "Algún dato en la información no se inserto. \nPorfavor intentar nuevamente... -.-");
+        }
+        
+        
+        //Siguiente: equipo2 a seguir escogiendo info....
+        aumentarContador();
+    }
+    
+    //##----------------------
+    
     public void equiposCof()
     {
         JOptionPane.showMessageDialog(null, "ACABAS DE HACER LA CONSULTA: EQUIPOS PARTICIPANTES POR CONFEDERACIÓN");
         
         //LOGIC
+        //##--
         
+        //Total de confederaciones
         
+        //Dividir en grupos por confederaciones
         
+        //Recorrer los grupos eh imprimir sus equipos
         
-        
-        
-        
+        //Fin de la operación...    
     }
     
     public void infoPartido()
@@ -56,11 +90,12 @@ public class ControladorPrincipal
     }
     
     
-    public void logicaVentanaPrincipal()
+    public void logicaVentanaPrincipal(String operacion)
     {
-            
+        //Seteo la option a la variable global
+        setOption(operacion);
         //Menu de control para las opciones deisponibles
-        switch(option){
+        switch(getOption()){
             case "EQUIPOS PARTICIPANTES POR CONFEDERACIÓN":  
                 equiposCof();
                 break;

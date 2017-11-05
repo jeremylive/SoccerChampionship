@@ -57,6 +57,25 @@ public class Conexion
         this.contacto = conexion;
     }
     /**
+     * Seteo el nuevo usuario y la nueva contraseña a evaluar
+     * @param usuario
+     * @param password 
+     */
+    public static void setcuenta(String usuario, String password)
+    {
+        Conexion.usuario = usuario;
+        Conexion.password = password;
+    }
+ 
+    /**
+     * Obtengo el estado de la conexion de la BD
+     * @return 
+     */
+    public static boolean getstatus()
+    {
+        return  status;
+    }   
+    /**
      * ########################################################################
      * Funciones
      * ########################################################################
@@ -83,32 +102,6 @@ public class Conexion
         }
         
         return this;
-    }
-     
-    /**
-     * Seteo el nuevo usuario y la nueva contraseña a evaluar
-     * @param usuario
-     * @param password 
-     */
-    public static void setcuenta(String usuario, String password)
-    {
-        Conexion.usuario = usuario;
-        Conexion.password = password;
-    }
- 
-    /**
-     * Obtengo el estado de la conexion de la BD
-     * @return 
-     */
-    public static boolean getstatus()
-    {
-        return  status;
-    }
-    
-    //Main
-    public static void main(String[] args) {
-        Conexion conexion = new Conexion();
-        conexion.Conectar();
     }
     
     //Fin de la clase conexión
