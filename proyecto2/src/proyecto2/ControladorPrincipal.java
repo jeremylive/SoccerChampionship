@@ -1,5 +1,7 @@
 package proyecto2;
 
+import javax.swing.JOptionPane;
+
 public class ControladorPrincipal 
 {
     //Variables globales
@@ -17,31 +19,40 @@ public class ControladorPrincipal
         this.option = opcion;
     }
     
-    
     //Funciones
     public void equiposCof()
     {
+        JOptionPane.showMessageDialog(null, "ACABAS DE HACER LA CONSULTA: EQUIPOS PARTICIPANTES POR CONFEDERACIÓN");
+        
+        //LOGIC
+        
+        
+        
+        
+        
+        
         
     }
     
     public void infoPartido()
     {
-        
+        JOptionPane.showMessageDialog(null, "ACABAS DE HACER LA CONSULTA: INFORME OFICIAL DEL PARTIDO");
     }
     
     public void grupoClasificaciones()
     {
-        
+        JOptionPane.showMessageDialog(null, "ACABAS DE HACER LA CONSULTA: GRUPOS Y CLASIFICACIONES");
+                
     }
     
     public void posicionesGenerales()
     {
-        
+        JOptionPane.showMessageDialog(null, "ACABAS DE HACER LA CONSULTA: TABLA GENERAL DE POSICIONES");
     }
     
     public void goleadores()
     {
-        
+        JOptionPane.showMessageDialog(null, "ACABAS DE HACER LA CONSULTA: TABLA DE GOLEADORES");
     }
     
     

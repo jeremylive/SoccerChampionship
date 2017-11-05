@@ -41,8 +41,6 @@ public class ventanaPrincipal extends javax.swing.JFrame
         ejecutar = new javax.swing.JButton();
         crudEquipo = new javax.swing.JButton();
         crudPartido = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
         crudPartido1 = new javax.swing.JButton();
 
         textArea.setColumns(20);
@@ -88,10 +86,6 @@ public class ventanaPrincipal extends javax.swing.JFrame
         crudPartido.setFont(new java.awt.Font("MS Gothic", 1, 12)); // NOI18N
         crudPartido.setText("PARTIDO[CRUD]");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane2.setViewportView(jTextArea1);
-
         crudPartido1.setBackground(new java.awt.Color(51, 51, 255));
         crudPartido1.setFont(new java.awt.Font("MS Gothic", 1, 12)); // NOI18N
         crudPartido1.setText("DICCIONARIO");
@@ -105,8 +99,7 @@ public class ventanaPrincipal extends javax.swing.JFrame
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 517, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(salir)
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
@@ -133,15 +126,10 @@ public class ventanaPrincipal extends javax.swing.JFrame
                         .addComponent(crudEquipo)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(crudPartido)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(crudPartido1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(salir))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(32, 32, 32)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)))
+                .addGap(6, 6, 6)
+                .addComponent(crudPartido1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 327, Short.MAX_VALUE)
+                .addComponent(salir)
                 .addContainerGap())
         );
 
@@ -171,8 +159,6 @@ public class ventanaPrincipal extends javax.swing.JFrame
     private javax.swing.JButton ejecutar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JComboBox<String> opciones;
     private javax.swing.JButton salir;
     private javax.swing.JTextArea textArea;
