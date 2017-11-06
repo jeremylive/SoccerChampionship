@@ -205,6 +205,11 @@ public class interfazPartidos extends javax.swing.JFrame
         ejecutarGAR.setText("Ejecutar");
 
         ejecutarAlbitro.setText("Ejecutar");
+        ejecutarAlbitro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ejecutarAlbitroActionPerformed(evt);
+            }
+        });
 
         golAmanillaRoja.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Gol", "TarjetasAmarilla", "TarjetasRoja" }));
 
@@ -286,7 +291,6 @@ public class interfazPartidos extends javax.swing.JFrame
                                             .addComponent(ejecutarGAR)
                                             .addComponent(jugadorGAR, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                     .addComponent(jLabel20))
-                                .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -549,6 +553,10 @@ public class interfazPartidos extends javax.swing.JFrame
     private void ejecutarCrudPartidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ejecutarCrudPartidoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_ejecutarCrudPartidoActionPerformed
+
+    private void ejecutarAlbitroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ejecutarAlbitroActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ejecutarAlbitroActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField arbitroAsistente1;

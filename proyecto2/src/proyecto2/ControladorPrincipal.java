@@ -1,5 +1,8 @@
 package proyecto2;
 
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 public class ControladorPrincipal 
@@ -8,7 +11,9 @@ public class ControladorPrincipal
     private String option;
     private int contadorPrincipal;//de 0 a 1
     private int contadorMundial; //limite 48
-    
+    private ArrayList<String> equiposMundial;
+    private ResultSet output;            //Guarda el resultado del query
+    private ResultSetMetaData metaDatos;
     
     //Variables de PartidoCRUD
     private String equipo_1;
@@ -85,6 +90,14 @@ public class ControladorPrincipal
         this.contadorMundial++;
     }
 
+    public ArrayList<String> getEquiposMundial() {
+        return equiposMundial;
+    }
+
+    public void setEquiposMundial(String equiposMundiall) {
+        this.equiposMundial.add(equiposMundiall);
+    }
+    
     public void setContadorPrincipal(int contadorPrincipal) {
         this.contadorPrincipal = contadorPrincipal;
     }
@@ -302,14 +315,99 @@ public class ControladorPrincipal
     
     //Funciones
     
-    public void cargarEquipos(String equipo2, String nombreEstadio, String fecha, String hora, String cantAficionados, String jugadoresSuplentes, String jugadoresTitulares, String minPrimerTR, String minSegundoTR)
+    public int cargarEquipos(String equipo2, String nombreEstadio, String fecha, String hora, String cantAficionados, String jugadoresSuplentes, String jugadoresTitulares, String minPrimerTR, String minSegundoTR)
     {
         if(getContadorP() == 1)
             {
             if(!(equipo2.isEmpty() || nombreEstadio.isEmpty() || fecha.isEmpty() || hora.isEmpty() || cantAficionados.isEmpty() || jugadoresSuplentes.isEmpty() || jugadoresTitulares.isEmpty() || minPrimerTR.isEmpty() || minSegundoTR.isEmpty()))
             {
-                //Valido que este bien la info
- 
+                                //--LOGIC SIGUIENTE EQUIPO
+                //--Valido que este bien la informacion insertada
+                //Equipo no debe estar en este string de equipos insertados
+                for (int i = 0; i < equiposMundial.size(); i++) {
+                    if(equiposMundial.get(i).equals(equipo2)){
+                        JOptionPane.showMessageDialog(null, "El equipo seleccionado ya esta dentro del mundial\nIntentelo de nuevo");
+                        return 1;
+                    } else {
+                        setEquipo_1(equipo2);
+                    }
+                }                
+                //Valido formato fecha 
+                String[] formatoFecha = fecha.split("/");
+                for (String string : formatoFecha) {
+                    if(isInteger(string)){
+                        setFecha_partido(string);
+                    }else{
+                        JOptionPane.showMessageDialog(null, "La fecha esta con un formato erroneo \nDigitela con este formato:\n día/mes/año");
+                        return 1;
+                    }
+                }
+                //Valido formato hora
+                if(isInteger(hora)){
+                    setHora_partido(hora);
+                }else{
+                    JOptionPane.showMessageDialog(null, "La fecha esta con un formato erroneo \nDigitela con este formato:\n Un # entre 0 a 9");
+                    return 1;
+                }
+                //Valido que este dato sea un numero
+                if(isInteger(cantAficionados)){
+                    setCantidad_aficionados(cantAficionados);
+                }else{
+                    JOptionPane.showMessageDialog(null, "La fecha esta con un formato erroneo \nDigitela con este formato:\n Un # entre 0 a 1000 0 más");
+                    return 1;
+                }
+                //Valido suplentes 12
+                String[] jSuplentes = jugadoresSuplentes.split(", ");
+                int contadorJugador = 0;
+                for (String jSuplente : jSuplentes) {
+                    contadorJugador++;
+                }
+                //Se puede jugar un partido con menos de 12 jugadores
+                if(contadorJugador <= 12){
+                    setJugadores_suplentes(jugadoresSuplentes);
+                }
+                
+                //Valido titulares 11
+                String[] jTitulares = jugadoresTitulares.split(", ");
+                contadorJugador = 0;
+                for (String jSuplente : jSuplentes) {
+                    contadorJugador++;
+                }
+                //Partido de 11 jugadores
+                if(contadorJugador == 11){
+                    setJugadores_titulares(jugadoresTitulares);
+                }
+                
+                //Validos primerTiempoRepo 
+                setPrimerTiempoRepMin(minPrimerTR);
+                
+                //Valido segTiempoR  
+                setSegundoTiempoRepMin(minSegundoTR);                
+
+                //Se setea nadamas
+                setNombre_estadio(nombreEstadio);
+                
+                JOptionPane.showMessageDialog(null, "Felicidades toda su información a insertar esta correcta.");
+
+                //Hago QUERYS........... SQL
+                //-->inserto informacion a la tablas 
+                /*
+                output = Conexion.consultaSql("SELECT *");  
+                metaDatos = output.getMetaData();   //Obtengo el total de columnas que tiene la tabla
+                int index = metaDatos.getColumnCount();
+                
+                while (output.next()) {
+                    for (int i = 1; i <= index; i++) {
+                        if (i > 1){
+                            System.out.print(",  ");
+                        }
+
+                        String columnValue = output.getString(i);
+                        System.out.print(columnValue);
+                    }
+                    System.out.println("");  
+                }     
+                */
                 
                 //Aumento el contador que lleva los partidos max 48
                 upContadorMundial();
@@ -330,6 +428,18 @@ public class ControladorPrincipal
         } else {
             JOptionPane.showMessageDialog(null, "No se ah eligio al EQUIPO 1 \nPorfavor hacer la escogencia... -.-");
         }
+        return 0;
+    }
+    
+    public boolean isInteger(String cadena)
+    {
+        try{
+            Integer.parseInt(cadena);
+            return true;
+        }catch(NumberFormatException e){
+            System.out.println(e.getMessage());
+            return false;
+        }
     }
     
     public int sigEquipo(String equipo1, String nombreEstadio, String fecha, String hora, String cantAficionados, String jugadoresSuplentes, String jugadoresTitulares, String minPrimerTR, String minSegundoTR)
@@ -338,56 +448,94 @@ public class ControladorPrincipal
         {
             if(!(equipo1.isEmpty() || nombreEstadio.isEmpty() || fecha.isEmpty() || hora.isEmpty() || cantAficionados.isEmpty() || jugadoresSuplentes.isEmpty() || jugadoresTitulares.isEmpty() || minPrimerTR.isEmpty() || minSegundoTR.isEmpty()))
             {
-                String[] equiposMundial = {};
-                
-                
                 //--LOGIC SIGUIENTE EQUIPO
                 //--Valido que este bien la informacion insertada
                 //Equipo no debe estar en este string de equipos insertados
-                for (int i = 0; i < equiposMundial.length; i++) {
-                    if(equiposMundial[i].equals(equipo1)){
+                for (int i = 0; i < equiposMundial.size(); i++) {
+                    if(equiposMundial.get(i).equals(equipo1)){
                         JOptionPane.showMessageDialog(null, "El equipo seleccionado ya esta dentro del mundial\nIntentelo de nuevo");
                         return 1;
                     } else {
                         setEquipo_1(equipo1);
                     }
                 }                
-                //Valido formato fecha y hora
+                //Valido formato fecha 
                 String[] formatoFecha = fecha.split("/");
                 for (String string : formatoFecha) {
-                    try{
-                        int num = Integer.parseInt(string);
-                    }catch(Exception e){
-                        System.out.println(e.getMessage());
+                    if(isInteger(string)){
+                        setFecha_partido(string);
+                    }else{
                         JOptionPane.showMessageDialog(null, "La fecha esta con un formato erroneo \nDigitela con este formato:\n día/mes/año");
                         return 1;
                     }
                 }
-                setFecha_partido(fecha);
-                try{
-                    int num = Integer.parseInt(hora);
-                }catch(Exception e){
-                    System.out.println(e.getMessage());
-                    JOptionPane.showMessageDialog(null, "La fecha esta con un formato erroneo \nDigitela con este formato:\n día/mes/año");
+                //Valido formato hora
+                if(isInteger(hora)){
+                    setHora_partido(hora);
+                }else{
+                    JOptionPane.showMessageDialog(null, "La fecha esta con un formato erroneo \nDigitela con este formato:\n Un # entre 0 a 9");
                     return 1;
                 }
-                setHora_partido(hora);
                 //Valido que este dato sea un numero
-                setCantidad_aficionados(cantAficionados);
+                if(isInteger(cantAficionados)){
+                    setCantidad_aficionados(cantAficionados);
+                }else{
+                    JOptionPane.showMessageDialog(null, "La fecha esta con un formato erroneo \nDigitela con este formato:\n Un # entre 0 a 1000 0 más");
+                    return 1;
+                }
+                //Valido suplentes 12
+                String[] jSuplentes = jugadoresSuplentes.split(", ");
+                int contadorJugador = 0;
+                for (String jSuplente : jSuplentes) {
+                    contadorJugador++;
+                }
+                //Se puede jugar un partido con menos de 12 jugadores
+                if(contadorJugador <= 12){
+                    setJugadores_suplentes(jugadoresSuplentes);
+                }
                 
-                setJugadores_suplentes(jugadoresSuplentes);
-                setJugadores_titulares(jugadoresTitulares);
+                //Valido titulares 11
+                String[] jTitulares = jugadoresTitulares.split(", ");
+                contadorJugador = 0;
+                for (String jSuplente : jSuplentes) {
+                    contadorJugador++;
+                }
+                //Partido de 11 jugadores
+                if(contadorJugador == 11){
+                    setJugadores_titulares(jugadoresTitulares);
+                }
                 
+                //Validos primerTiempoRepo 
                 setPrimerTiempoRepMin(minPrimerTR);
+                
+                //Valido segTiempoR  
                 setSegundoTiempoRepMin(minSegundoTR);                
 
-
+                //Se setea nadamas
                 setNombre_estadio(nombreEstadio);
                 
-                JOptionPane.showMessageDialog(null, "Felicidades toda su información esta correcta.");
+                JOptionPane.showMessageDialog(null, "Felicidades toda su información a insertar esta correcta.");
 
                 //Hago QUERYS........... SQL
                 //-->inserto informacion a la tablas 
+                /*
+                output = Conexion.consultaSql("SELECT *");  
+                metaDatos = output.getMetaData();   //Obtengo el total de columnas que tiene la tabla
+                int index = metaDatos.getColumnCount();
+                
+                while (output.next()) {
+                    for (int i = 1; i <= index; i++) {
+                        if (i > 1){
+                            System.out.print(",  ");
+                        }
+
+                        String columnValue = output.getString(i);
+                        System.out.print(columnValue);
+                    }
+                    System.out.println("");  
+                }     
+                */
+                
                 //--tabla jugadores titulares
 
                 //--tabla jugadores suplentes
