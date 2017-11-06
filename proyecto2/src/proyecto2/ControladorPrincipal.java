@@ -1,7 +1,10 @@
 package proyecto2;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
@@ -14,6 +17,8 @@ public class ControladorPrincipal
     private ArrayList<String> equiposMundial;
     private ResultSet output;            //Guarda el resultado del query
     private ResultSetMetaData metaDatos;
+    private Statement statement;
+    private Connection connection;
     
     //Variables de PartidoCRUD
     private String equipo_1;
@@ -89,6 +94,40 @@ public class ControladorPrincipal
     public void upContadorMundial() {
         this.contadorMundial++;
     }
+
+    public ResultSet getOutput() {
+        return output;
+    }
+
+    public void setOutput(ResultSet output) {
+        this.output = output;
+    }
+
+    public ResultSetMetaData getMetaDatos() {
+        return metaDatos;
+    }
+
+    public void setMetaDatos(ResultSetMetaData metaDatos) {
+        this.metaDatos = metaDatos;
+    }
+
+    public Statement getStatement() {
+        return statement;
+    }
+
+    public void setStatement(Statement statement) {
+        this.statement = statement;
+    }
+
+    public Connection getConnection() {
+        return connection;
+    }
+
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+    }
+    
+    
 
     public ArrayList<String> getEquiposMundial() {
         return equiposMundial;
@@ -391,23 +430,16 @@ public class ControladorPrincipal
 
                 //Hago QUERYS........... SQL
                 //-->inserto informacion a la tablas 
-                /*
-                output = Conexion.consultaSql("SELECT *");  
+                connection = Conexion.getConexion();
+                statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE , ResultSet.CONCUR_UPDATABLE);  
+         
+                output = statement.executeQuery("");
+               
                 metaDatos = output.getMetaData();   //Obtengo el total de columnas que tiene la tabla
                 int index = metaDatos.getColumnCount();
                 
-                while (output.next()) {
-                    for (int i = 1; i <= index; i++) {
-                        if (i > 1){
-                            System.out.print(",  ");
-                        }
-
-                        String columnValue = output.getString(i);
-                        System.out.print(columnValue);
-                    }
-                    System.out.println("");  
-                }     
-                */
+                //while(output.next())
+                
                 
                 //Aumento el contador que lleva los partidos max 48
                 upContadorMundial();
@@ -442,7 +474,7 @@ public class ControladorPrincipal
         }
     }
     
-    public int sigEquipo(String equipo1, String nombreEstadio, String fecha, String hora, String cantAficionados, String jugadoresSuplentes, String jugadoresTitulares, String minPrimerTR, String minSegundoTR)
+    public int sigEquipo(String equipo1, String nombreEstadio, String fecha, String hora, String cantAficionados, String jugadoresSuplentes, String jugadoresTitulares, String minPrimerTR, String minSegundoTR) throws SQLException
     {
         if(getContadorP() == 0)
         {
@@ -518,23 +550,17 @@ public class ControladorPrincipal
 
                 //Hago QUERYS........... SQL
                 //-->inserto informacion a la tablas 
-                /*
-                output = Conexion.consultaSql("SELECT *");  
+                
+                connection = Conexion.getConexion();
+                statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE , ResultSet.CONCUR_UPDATABLE);  
+         
+                output = statement.executeQuery("");
+               
                 metaDatos = output.getMetaData();   //Obtengo el total de columnas que tiene la tabla
                 int index = metaDatos.getColumnCount();
                 
-                while (output.next()) {
-                    for (int i = 1; i <= index; i++) {
-                        if (i > 1){
-                            System.out.print(",  ");
-                        }
-
-                        String columnValue = output.getString(i);
-                        System.out.print(columnValue);
-                    }
-                    System.out.println("");  
-                }     
-                */
+                //while(output.next())
+                
                 
                 //--tabla jugadores titulares
 

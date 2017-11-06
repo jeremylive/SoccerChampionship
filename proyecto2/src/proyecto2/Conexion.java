@@ -48,7 +48,7 @@ public class Conexion
         return Conexion.password;
     }
     
-    public Connection getConexion() {
+    public static Connection getConexion() {
         return contacto;
     }
     
