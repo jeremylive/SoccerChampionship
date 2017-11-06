@@ -7,19 +7,40 @@ public class ControladorPrincipal
     //Variables globales
     private String option;
     private int contadorPrincipal;
+    
     //Variables de PartidoCRUD
     private String equipo_1;
     private String equipo_2;
+    private String jugadores_titulares;
+    private String jugadores_suplentes;
     private String nombre_estadio;
     private String fecha_partido;
     private String hora_partido;
     private String cantidad_aficionados;
     private String primerTiempoRepMin;
     private String segundoTiempoRepMin;
-    private String tiempoExtra;
-    private String tieraronPenales;
+    private String tiempo_extra;
+    private String tieraron_penales;
+    //Info: goles, t.amarillas, t.rojas
+    private String tipo_accion;
+    private String minGAR;
+    private String segGAR;
+    private String jugadorGAR;
+    //Info;: cambios
+    private String minCambio;
+    private String segCambio;
+    private String jugadorEntraCambio;
+    private String jugadorSaleCambio;
+    private String cambios_hechos;
+    //Info: albitros
+    private String arbitro_principal;
+    private String arbitro_asistente_1;
+    private String arbitro_asistente_2;
+    private String arbitro_4to;
+    private String arbitro_5to;
     
-
+    //Variables de QUERYS
+    
     
     //Constructor
     public ControladorPrincipal()
