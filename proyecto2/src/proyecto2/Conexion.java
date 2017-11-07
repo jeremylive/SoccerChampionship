@@ -86,13 +86,32 @@ public class Conexion
     {
         try{
             
-            Class.forName("oracle.jdbc.OracleDriver");
+            Class .forName("oracle.jdbc.OracleDriver");
             String BaseDeDatos = "jdbc:oracle:thin:@//172.19.32.101:1521/grupo07.basedatos";
-            contacto = DriverManager.getConnection(BaseDeDatos,getName(),getPass());
-        
-            if(contacto != null)
+            setConexion(DriverManager.getConnection(BaseDeDatos,getName(),getPass()));
+            
+            if(getConexion() != null)
             {
-                this.status = true;               
+                this.status = true;  
+                /*
+                Statement statement;
+                statement = getConexion().createStatement(ResultSet.TYPE_FORWARD_ONLY,  ResultSet.CONCUR_READ_ONLY);  
+                ResultSet output = statement.executeQuery("SELECT * FROM ALBITRO");
+                getConexion().commit();
+                
+                while(output.next())
+                {
+                    
+                    
+                    
+                    for (int i = 1; i <= output.getFetchSize(); i++) {
+                        System.out.println("entro al for");
+                        System.out.println(output.getString(i));
+                    }
+                   
+                }
+                System.out.println("no entro...");
+                 */
                 System.out.println("Conexion exitosa a esquema JLIVE");
             } else {
                 System.out.println("Conexion fallida a JLIVE");

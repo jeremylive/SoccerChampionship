@@ -14,7 +14,7 @@ public class ControladorPrincipal
     private String option;
     private int contadorPrincipal;//de 0 a 1
     private int contadorMundial; //limite 48
-    private ArrayList<String> equiposMundial;
+    private ArrayList<String> equiposMundial = new ArrayList<String>();
     private ResultSet output;            //Guarda el resultado del query
     private ResultSetMetaData metaDatos;
     private Statement statement;
@@ -354,13 +354,47 @@ public class ControladorPrincipal
     
     //Funciones
     
-    public int cargarEquipos(String equipo2, String nombreEstadio, String fecha, String hora, String cantAficionados, String jugadoresSuplentes, String jugadoresTitulares, String minPrimerTR, String minSegundoTR)
+    public void query02()
+    {
+
+    }
+    
+    public void query() throws SQLException 
+    {   
+      
+            connection = Conexion.getConexion();
+            statement = connection.createStatement();  
+
+            output = statement.executeQuery("SELECT * FROM ALBITRO");
+
+            while(output.next())
+            {
+                System.out.println("entro al while");
+                System.out.println("entro al while");
+                System.out.println("numeroPass: "+output.getString(1));
+                System.out.println("paisNacionalidad: "+output.getString(2));
+                System.out.println("fecha: "+output.getDate(3));
+                /*
+                for (int i = 1; i <= output.getFetchSize(); i++) {
+                    System.out.println("entro al for");
+                    System.out.println(output.getString(i));
+                }
+                */
+            }
+            System.out.println("no entro...");
+                
+        
+        
+    }
+    
+    
+    public int cargarEquipos(String equipo2, String nombreEstadio, String fecha, String hora, String cantAficionados, String jugadoresSuplentes, String jugadoresTitulares, String minPrimerTR, String minSegundoTR) throws SQLException
     {
         if(getContadorP() == 1)
             {
             if(!(equipo2.isEmpty() || nombreEstadio.isEmpty() || fecha.isEmpty() || hora.isEmpty() || cantAficionados.isEmpty() || jugadoresSuplentes.isEmpty() || jugadoresTitulares.isEmpty() || minPrimerTR.isEmpty() || minSegundoTR.isEmpty()))
             {
-                                //--LOGIC SIGUIENTE EQUIPO
+                //--LOGIC SIGUIENTE EQUIPO
                 //--Valido que este bien la informacion insertada
                 //Equipo no debe estar en este string de equipos insertados
                 for (int i = 0; i < equiposMundial.size(); i++) {
@@ -381,7 +415,7 @@ public class ControladorPrincipal
                         return 1;
                     }
                 }
-                //Valido formato hora
+                //Valido formato hora, 00:00
                 if(isInteger(hora)){
                     setHora_partido(hora);
                 }else{
@@ -433,13 +467,17 @@ public class ControladorPrincipal
                 connection = Conexion.getConexion();
                 statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE , ResultSet.CONCUR_UPDATABLE);  
          
-                output = statement.executeQuery("");
+                output = statement.executeQuery("SELECT * FROM ALBITRO");
                
                 metaDatos = output.getMetaData();   //Obtengo el total de columnas que tiene la tabla
                 int index = metaDatos.getColumnCount();
                 
-                //while(output.next())
-                
+                while(output.next())
+                {
+                    for (int i = 0; i < index; i++) {
+                        System.out.println(output.getString(i));
+                    }
+                }
                 
                 //Aumento el contador que lleva los partidos max 48
                 upContadorMundial();
@@ -483,14 +521,20 @@ public class ControladorPrincipal
                 //--LOGIC SIGUIENTE EQUIPO
                 //--Valido que este bien la informacion insertada
                 //Equipo no debe estar en este string de equipos insertados
-                for (int i = 0; i < equiposMundial.size(); i++) {
-                    if(equiposMundial.get(i).equals(equipo1)){
-                        JOptionPane.showMessageDialog(null, "El equipo seleccionado ya esta dentro del mundial\nIntentelo de nuevo");
-                        return 1;
-                    } else {
-                        setEquipo_1(equipo1);
-                    }
-                }                
+                if(equiposMundial.size() == 0)
+                {
+                    setEquipo_1(equipo1);
+                }else{
+                    for (int i = 0; i < equiposMundial.size(); i++) {
+                        if(equiposMundial.get(i).equals(equipo1)){
+                            JOptionPane.showMessageDialog(null, "El equipo seleccionado ya esta dentro del mundial\nIntentelo de nuevo");
+                            return 1;
+                        } else {
+                            setEquipo_1(equipo1);
+                        }
+                    }   
+                }
+                             
                 //Valido formato fecha 
                 String[] formatoFecha = fecha.split("/");
                 for (String string : formatoFecha) {
@@ -554,12 +598,18 @@ public class ControladorPrincipal
                 connection = Conexion.getConexion();
                 statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE , ResultSet.CONCUR_UPDATABLE);  
          
-                output = statement.executeQuery("");
+                output = statement.executeQuery("SELECT * FROM ALBITRO");
                
                 metaDatos = output.getMetaData();   //Obtengo el total de columnas que tiene la tabla
                 int index = metaDatos.getColumnCount();
                 
-                //while(output.next())
+                while(output.next())
+                {
+                    for (int i = 0; i < index; i++) {
+                        System.out.println("se imprimio");
+                        System.out.println(output.getString(i));
+                    }
+                }
                 
                 
                 //--tabla jugadores titulares

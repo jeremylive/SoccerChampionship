@@ -1,5 +1,8 @@
 package proyecto2;
 
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -148,15 +151,21 @@ public class ventanaLogin extends javax.swing.JFrame
         
         //Establesco conexion
         Conexion conexion = new Conexion();
-        
      
         conexion.setcuenta(getJText1(), getJText2());
-        //conexion.Conectar();
+        conexion.Conectar();
 
         //Si es estable entonces abra la APP
-        //if(Conexion.getstatus())
-        if(true)
-        {                            
+        if(Conexion.getstatus())
+        //if(true)
+        {         
+            try {
+                control.query();
+            } catch (SQLException ex) {
+            System.out.println("Error: " + ex.getMessage());
+            }
+            
+            
             ventanaPrincipal interfaz2 = new ventanaPrincipal(control);
             interfaz2.setLocationRelativeTo(null);
             interfaz2.setVisible(true);     
