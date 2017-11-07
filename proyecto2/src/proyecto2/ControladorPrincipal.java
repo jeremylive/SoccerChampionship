@@ -33,6 +33,7 @@ public class ControladorPrincipal
     private String segundoTiempoRepMin;
     private String tiempo_extra;
     private String tieraron_penales;
+    private String grupo_clasificatoria;
     //Info: goles, t.amarillas, t.rojas
     private String tipo_accion;
     private String minGAR;
@@ -99,6 +100,14 @@ public class ControladorPrincipal
         return output;
     }
 
+    public String getGrupo_clasificatoria() {
+        return grupo_clasificatoria;
+    }
+
+    public void setGrupo_clasificatoria(String grupo_clasificatoria) {
+        this.grupo_clasificatoria = grupo_clasificatoria;
+    }
+    
     public void setOutput(ResultSet output) {
         this.output = output;
     }
@@ -359,36 +368,38 @@ public class ControladorPrincipal
 
     }
     
-    public void query() throws SQLException 
+    public void queryPartido() throws SQLException 
     {   
-      
-            connection = Conexion.getConexion();
-            statement = connection.createStatement();  
-
-            output = statement.executeQuery("SELECT * FROM ALBITRO");
-
-            while(output.next())
-            {
-                System.out.println("entro al while");
-                System.out.println("entro al while");
-                System.out.println("numeroPass: "+output.getString(1));
-                System.out.println("paisNacionalidad: "+output.getString(2));
-                System.out.println("fecha: "+output.getDate(3));
-                /*
-                for (int i = 1; i <= output.getFetchSize(); i++) {
-                    System.out.println("entro al for");
-                    System.out.println(output.getString(i));
-                }
-                */
-            }
-            System.out.println("no entro...");
-                
+        int numero_partido=0;
         
+        //Variables a usar en la funcion de partidos, total partidos 64
+        String insercionHacer = "";
+        
+        //Verifico que este conectado a la BD
+        connection = Conexion.getConexion();
+        statement = connection.createStatement();  
+        //Empiezo las inserciones de partidos
+        insercionHacer+=numero_partido+", "+getGrupo_clasificatoria()+", "+getFecha_partido()+", "+getHora_partido()+", "+getCantidad_aficionados()+", "+primerTiempoRepMin+", "+segundoTiempoRepMin+", "+tiempo_extra+", "+getTieraron_penales();
+        
+        String insertPartido = "INSERT INTO PARTIDO (NUMERO_PARTIDO, ETAPA_CLASIFICATORIA, FECHA, HORA, CANTIDAD_AFICIONADOS, MIN_REPO_PRIMER_TIEMPO, MIN_REPO_SEGUNDO_TIEMPO, SEJUGOTIEMPOEXTRA, NOMBRE_ESTADIO, HUBOPENALES)\n" +
+        "VALUES ("+insercionHacer+")";
+        
+        //Inserto partidos
+        statement.executeUpdate(insertPartido);
+        getConnection().commit();
+        
+        output = statement.executeQuery("SELECT * FROM PARTIDO");
+        while(output.next())
+        {
+            System.out.println("numeroPartido: "+output.getString(1)+"\netapa_clasi: "+output.getString(2)+"\nfecha: "+output.getDate(3)+"\nhira: "+output.getDate(4)+"\ncant_afici: "+output.getDate(5)+"\nminRepoPrimer: "+output.getDate(6)+"\nsegRepoSegun: "+output.getDate(7)+"\nTextra: "+output.getDate(8)+"\npenales: "+output.getDate(9));
+           
+        }
+        System.out.println("no entro...");
         
     }
     
     
-    public int cargarEquipos(String equipo2, String nombreEstadio, String fecha, String hora, String cantAficionados, String jugadoresSuplentes, String jugadoresTitulares, String minPrimerTR, String minSegundoTR) throws SQLException
+    public int cargarEquipos(String equipo2, String nombreEstadio, String fecha, String hora, String cantAficionados, String jugadoresSuplentes, String jugadoresTitulares, String minPrimerTR, String minSegundoTR, String grupoC) throws SQLException
     {
         if(getContadorP() == 1)
             {
@@ -464,20 +475,7 @@ public class ControladorPrincipal
 
                 //Hago QUERYS........... SQL
                 //-->inserto informacion a la tablas 
-                connection = Conexion.getConexion();
-                statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE , ResultSet.CONCUR_UPDATABLE);  
-         
-                output = statement.executeQuery("SELECT * FROM ALBITRO");
-               
-                metaDatos = output.getMetaData();   //Obtengo el total de columnas que tiene la tabla
-                int index = metaDatos.getColumnCount();
-                
-                while(output.next())
-                {
-                    for (int i = 0; i < index; i++) {
-                        System.out.println(output.getString(i));
-                    }
-                }
+                queryPartido();
                 
                 //Aumento el contador que lleva los partidos max 48
                 upContadorMundial();
@@ -512,7 +510,7 @@ public class ControladorPrincipal
         }
     }
     
-    public int sigEquipo(String equipo1, String nombreEstadio, String fecha, String hora, String cantAficionados, String jugadoresSuplentes, String jugadoresTitulares, String minPrimerTR, String minSegundoTR) throws SQLException
+    public int sigEquipo(String equipo1, String nombreEstadio, String fecha, String hora, String cantAficionados, String jugadoresSuplentes, String jugadoresTitulares, String minPrimerTR, String minSegundoTR, String grupoC) throws SQLException
     {
         if(getContadorP() == 0)
         {
@@ -594,34 +592,8 @@ public class ControladorPrincipal
 
                 //Hago QUERYS........... SQL
                 //-->inserto informacion a la tablas 
+                queryPartido();
                 
-                connection = Conexion.getConexion();
-                statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE , ResultSet.CONCUR_UPDATABLE);  
-         
-                output = statement.executeQuery("SELECT * FROM ALBITRO");
-               
-                metaDatos = output.getMetaData();   //Obtengo el total de columnas que tiene la tabla
-                int index = metaDatos.getColumnCount();
-                
-                while(output.next())
-                {
-                    for (int i = 0; i < index; i++) {
-                        System.out.println("se imprimio");
-                        System.out.println(output.getString(i));
-                    }
-                }
-                
-                
-                //--tabla jugadores titulares
-
-                //--tabla jugadores suplentes
-
-                //--....
-
-                //....
-
-                //..
-
                 //Borro los campor en la interfaz 
 
 
@@ -706,3 +678,12 @@ public class ControladorPrincipal
     
     //Fin de la clase ControladorPrincipal
 }
+
+
+
+ /*
+            for (int i = 1; i <= output.getFetchSize(); i++) {
+                System.out.println("entro al for");
+                System.out.println(output.getString(i));
+            }
+            */

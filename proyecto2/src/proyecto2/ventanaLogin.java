@@ -158,14 +158,7 @@ public class ventanaLogin extends javax.swing.JFrame
         //Si es estable entonces abra la APP
         if(Conexion.getstatus())
         //if(true)
-        {         
-            try {
-                control.query();
-            } catch (SQLException ex) {
-            System.out.println("Error: " + ex.getMessage());
-            }
-            
-            
+        {                  
             ventanaPrincipal interfaz2 = new ventanaPrincipal(control);
             interfaz2.setLocationRelativeTo(null);
             interfaz2.setVisible(true);     

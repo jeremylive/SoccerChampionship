@@ -92,26 +92,7 @@ public class Conexion
             
             if(getConexion() != null)
             {
-                this.status = true;  
-                /*
-                Statement statement;
-                statement = getConexion().createStatement(ResultSet.TYPE_FORWARD_ONLY,  ResultSet.CONCUR_READ_ONLY);  
-                ResultSet output = statement.executeQuery("SELECT * FROM ALBITRO");
-                getConexion().commit();
-                
-                while(output.next())
-                {
-                    
-                    
-                    
-                    for (int i = 1; i <= output.getFetchSize(); i++) {
-                        System.out.println("entro al for");
-                        System.out.println(output.getString(i));
-                    }
-                   
-                }
-                System.out.println("no entro...");
-                 */
+                this.status = true; 
                 System.out.println("Conexion exitosa a esquema JLIVE");
             } else {
                 System.out.println("Conexion fallida a JLIVE");
