@@ -83,8 +83,8 @@ public class interfazPartidos extends javax.swing.JFrame
         borrarTupla = new javax.swing.JButton();
         jLabel30 = new javax.swing.JLabel();
         cambiosHechos = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jComboBox3 = new javax.swing.JComboBox<>();
+        primerTiempoR = new javax.swing.JComboBox<>();
+        segundoTiempoR = new javax.swing.JComboBox<>();
         jugaronTiemposExtras = new javax.swing.JComboBox<>();
         jLabel31 = new javax.swing.JLabel();
         tiraronPenales = new javax.swing.JComboBox<>();
@@ -186,6 +186,12 @@ public class interfazPartidos extends javax.swing.JFrame
 
         jLabel23.setText("Jugador:");
 
+        fecha.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fechaActionPerformed(evt);
+            }
+        });
+
         tablaAlbitros.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null},
@@ -233,9 +239,9 @@ public class interfazPartidos extends javax.swing.JFrame
         cambiosHechos.setEditable(false);
         cambiosHechos.setText("0");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2", "3", "4", "5" }));
+        primerTiempoR.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2", "3", "4", "5" }));
 
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2", "3", "4", "5" }));
+        segundoTiempoR.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2", "3", "4", "5" }));
 
         jugaronTiemposExtras.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "YES", "NO" }));
 
@@ -383,11 +389,11 @@ public class interfazPartidos extends javax.swing.JFrame
                                                 .addGroup(layout.createSequentialGroup()
                                                     .addComponent(jLabel28)
                                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                    .addComponent(primerTiempoR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                                 .addGroup(layout.createSequentialGroup()
                                                     .addComponent(jLabel29)
                                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                    .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                    .addComponent(segundoTiempoR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                             .addGap(2, 2, 2))
                                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                             .addComponent(jLabel24)
@@ -472,11 +478,11 @@ public class interfazPartidos extends javax.swing.JFrame
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel28)
-                                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(primerTiempoR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel29)
-                                    .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(segundoTiempoR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(sigEquipo, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -569,7 +575,7 @@ public class interfazPartidos extends javax.swing.JFrame
     }// </editor-fold>//GEN-END:initComponents
     private void sigEquipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sigEquipoActionPerformed
         try {      
-            control.sigEquipo(equipo1y2.getSelectedItem().toString(), nombreEstadio.getSelectedItem().toString(), fecha.getText(), hora.getText(), cantAficionados.getText(), jugadoresSuplentes.getText(), jugadoresTitulares.getText(), jugaronTiemposExtras.getSelectedItem().toString(), tiraronPenales.getSelectedItem().toString(), grupo_clasificatoria.getSelectedItem().toString());
+            control.sigEquipo(equipo1y2.getSelectedItem().toString(), nombreEstadio.getSelectedItem().toString(), fecha.getText(), hora.getText(), cantAficionados.getText(), jugadoresSuplentes.getText(), jugadoresTitulares.getText(), jugaronTiemposExtras.getSelectedItem().toString(), tiraronPenales.getSelectedItem().toString(), grupo_clasificatoria.getSelectedItem().toString(), primerTiempoR.getSelectedItem().toString(), segundoTiempoR.getSelectedItem().toString());
         } catch (SQLException ex) {
             Logger.getLogger(interfazPartidos.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -577,7 +583,7 @@ public class interfazPartidos extends javax.swing.JFrame
 
     private void cargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cargarActionPerformed
         try {      
-            control.cargarEquipos(equipo1y2.getSelectedItem().toString(), nombreEstadio.getSelectedItem().toString(), fecha.getText(), hora.getText(), cantAficionados.getText(), jugadoresSuplentes.getText(), jugadoresTitulares.getText(),jugaronTiemposExtras.getSelectedItem().toString(), tiraronPenales.getSelectedItem().toString(), grupo_clasificatoria.getSelectedItem().toString());
+            control.cargarEquipos(equipo1y2.getSelectedItem().toString(), nombreEstadio.getSelectedItem().toString(), fecha.getText(), hora.getText(), cantAficionados.getText(), jugadoresSuplentes.getText(), jugadoresTitulares.getText(),jugaronTiemposExtras.getSelectedItem().toString(), tiraronPenales.getSelectedItem().toString(), grupo_clasificatoria.getSelectedItem().toString(), primerTiempoR.getSelectedItem().toString(), segundoTiempoR.getSelectedItem().toString());
         } catch (SQLException ex) {
             Logger.getLogger(interfazPartidos.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -590,6 +596,10 @@ public class interfazPartidos extends javax.swing.JFrame
     private void ejecutarAlbitroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ejecutarAlbitroActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_ejecutarAlbitroActionPerformed
+
+    private void fechaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fechaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fechaActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField arbitroAsistente1;
@@ -609,8 +619,6 @@ public class interfazPartidos extends javax.swing.JFrame
     private javax.swing.JComboBox<String> golAmanillaRoja;
     private javax.swing.JComboBox<String> grupo_clasificatoria;
     private javax.swing.JTextField hora;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -652,9 +660,11 @@ public class interfazPartidos extends javax.swing.JFrame
     private javax.swing.JTextField minCambio;
     private javax.swing.JTextField minGAR;
     private javax.swing.JComboBox<String> nombreEstadio;
+    private javax.swing.JComboBox<String> primerTiempoR;
     private javax.swing.JTextField quintoAlbitro;
     private javax.swing.JTextField segCambio;
     private javax.swing.JTextField segGAR;
+    private javax.swing.JComboBox<String> segundoTiempoR;
     private javax.swing.JButton sigEquipo;
     private javax.swing.JTable tablaAlbitros;
     private javax.swing.JTable tabla_Jugadores;
