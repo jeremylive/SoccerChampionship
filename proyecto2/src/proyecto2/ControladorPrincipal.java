@@ -378,31 +378,49 @@ public class ControladorPrincipal
         //Verifico que este conectado a la BD
         connection = Conexion.getConexion();
         statement = connection.createStatement();  
-        //Empiezo las inserciones de partidos. to_date('10:10:00', 'HH:MI:SS')
-            insercionHacer+=numero_partido+", '"+getGrupo_clasificatoria()+"', "+"TO_DATE('"+getFecha_partido()+"', 'DD/MM/YYYY'), "+"TO_DATE('"+getHora_partido()+"', 'hh24:mi')"+", "+getCantidad_aficionados()+", "+getPrimerTiempoRepMin()+", "+getSegundoTiempoRepMin()+", '"+getTiempo_extra()+"', '"+getNombre_estadio()+"', '"+getTieraron_penales()+"'";
+        //Empiezo las inserciones de partidos
+        insercionHacer+=numero_partido+", "+getGrupo_clasificatoria()+", "+getFecha_partido()+", "+getHora_partido()+", "+getCantidad_aficionados()+", "+primerTiempoRepMin+", "+segundoTiempoRepMin+", "+tiempo_extra+", "+getTieraron_penales();
         
-        //vALIDAS ""....
-        String insertPartido = "INSERT INTO JLIVE.PARTIDO (NUMERO_PARTIDO, ETAPA_CLASIFICATORIA, FECHA, HORA, CANTIDAD_AFICIONADOS, MIN_REPO_PRIMER_TIEMPO, MIN_REPO_SEGUNDO_TIEMPO, SEJUGOTIEMPOEXTRA, NOMBRE_ESTADIO, HUBOPENALES) VALUES ("+insercionHacer+")";
-        System.out.println(insertPartido);
+        String insertPartido = "INSERT INTO PARTIDO (NUMERO_PARTIDO, ETAPA_CLASIFICATORIA, FECHA, HORA, CANTIDAD_AFICIONADOS, MIN_REPO_PRIMER_TIEMPO, MIN_REPO_SEGUNDO_TIEMPO, SEJUGOTIEMPOEXTRA, NOMBRE_ESTADIO, HUBOPENALES)\n" +
+        "VALUES ("+insercionHacer+")";
+        
         //Inserto partidos
-        statement.execute(insertPartido);
+        statement.executeUpdate(insertPartido);
         getConnection().commit();
         
         output = statement.executeQuery("SELECT * FROM PARTIDO");
         while(output.next())
         {
-            System.out.println("numeroPartido: "+output.getString(1)+"\netapa_clasi: "+output.getString(2)+"\nfecha: "+output.getString(3)+"\nhira: "+output.getString(4)+"\ncant_afici: "+output.getString(5)+"\nminRepoPrimer: "+output.getString(6)+"\nsegRepoSegun: "+output.getString(7)+"\nTextra: "+output.getString(8)+"\npenales: "+output.getString(9));
+            System.out.println("numeroPartido: "+output.getString(1)+"\netapa_clasi: "+output.getString(2)+"\nfecha: "+output.getDate(3)+"\nhira: "+output.getDate(4)+"\ncant_afici: "+output.getDate(5)+"\nminRepoPrimer: "+output.getDate(6)+"\nsegRepoSegun: "+output.getDate(7)+"\nTextra: "+output.getDate(8)+"\npenales: "+output.getDate(9));
            
         }
         System.out.println("no entro...");
         
     }
-   
-    public int cargarEquipos(String equipo2, String nombreEstadio, String fecha, String hora, String cantAficionados, String jugadoresSuplentes, String jugadoresTitulares, String tiempoExtra, String tiraronPenales, String grupoC, String minPrimerTR, String minSegundoTR) throws SQLException
+    
+    public void queryEquiposPorConfed(String codConfed) throws SQLException
+    {
+        String query;
+        if(codConfed.equals("*"))
+            query = "SELECT CONFEDERACIONESFUTBOL.CODIGO,EQUIPO.NOMBRE FROM EQUIPO JOIN CONFEDERACIONESFUTBOL ON CONFEDERACIONESFUTBOL.CODIGO = EQUIPO.CODIGO_CONF ORDER BY CONFEDERACIONESFUTBOL.CODIGO,EQUIPO.NOMBRE"; 
+        else
+            query = "SELECT CONFEDERACIONESFUTBOL.CODIGO,EQUIPO.NOMBRE FROM EQUIPO JOIN CONFEDERACIONESFUTBOL ON CONFEDERACIONESFUTBOL.CODIGO = EQUIPO.CODIGO_CONF WHERE CONFEDERACIONESFUTBOL.CODIGO = "+codConfed+" ORDER BY EQUIPO.NOMBRE";
+        
+        //Ejecuto el query
+        output = statement.executeQuery(query);
+        while(output.next())
+        {
+            System.out.println("Confederacion: "+output.getString(1)+"  Pais: "+output.getString(2));
+        }
+        System.out.println("no entro...");
+    }
+    
+    
+    public int cargarEquipos(String equipo2, String nombreEstadio, String fecha, String hora, String cantAficionados, String jugadoresSuplentes, String jugadoresTitulares, String minPrimerTR, String minSegundoTR, String grupoC) throws SQLException
     {
         if(getContadorP() == 1)
             {
-            if(!(equipo2.isEmpty() || nombreEstadio.isEmpty() || fecha.isEmpty() || hora.isEmpty() || cantAficionados.isEmpty() || jugadoresSuplentes.isEmpty() || jugadoresTitulares.isEmpty() || minPrimerTR.isEmpty() || minSegundoTR.isEmpty() || tiempoExtra.isEmpty() || tiraronPenales.isEmpty()))
+            if(!(equipo2.isEmpty() || nombreEstadio.isEmpty() || fecha.isEmpty() || hora.isEmpty() || cantAficionados.isEmpty() || jugadoresSuplentes.isEmpty() || jugadoresTitulares.isEmpty() || minPrimerTR.isEmpty() || minSegundoTR.isEmpty()))
             {
                 //--LOGIC SIGUIENTE EQUIPO
                 //--Valido que este bien la informacion insertada
@@ -426,11 +444,12 @@ public class ControladorPrincipal
                     }
                 }
                 //Valido formato hora, 00:00
-                setHora_partido(hora);
-                
-                //Seteo clasificatoria
-                setGrupo_clasificatoria(grupoC);
-                
+                if(isInteger(hora)){
+                    setHora_partido(hora);
+                }else{
+                    JOptionPane.showMessageDialog(null, "La fecha esta con un formato erroneo \nDigitela con este formato:\n Un # entre 0 a 9");
+                    return 1;
+                }
                 //Valido que este dato sea un numero
                 if(isInteger(cantAficionados)){
                     setCantidad_aficionados(cantAficionados);
@@ -468,10 +487,6 @@ public class ControladorPrincipal
 
                 //Se setea nadamas
                 setNombre_estadio(nombreEstadio);
-                
-                //Seteo tiempo extra y si hubo penales
-                setTiempo_extra(tiempoExtra);
-                setTieraron_penales(tiraronPenales);
                 
                 JOptionPane.showMessageDialog(null, "Felicidades toda su información a insertar esta correcta.");
 
@@ -512,11 +527,11 @@ public class ControladorPrincipal
         }
     }
     
-    public int sigEquipo(String equipo1, String nombreEstadio, String fecha, String hora, String cantAficionados, String jugadoresSuplentes, String jugadoresTitulares, String tiempoExtra, String penales, String grupoC, String minPrimerTR1, String minSegundoTR1) throws SQLException
+    public int sigEquipo(String equipo1, String nombreEstadio, String fecha, String hora, String cantAficionados, String jugadoresSuplentes, String jugadoresTitulares, String minPrimerTR, String minSegundoTR, String grupoC) throws SQLException
     {
         if(getContadorP() == 0)
         {
-            if(!(equipo1.isEmpty() || nombreEstadio.isEmpty() || fecha.isEmpty() || hora.isEmpty() || cantAficionados.isEmpty() || jugadoresSuplentes.isEmpty() || jugadoresTitulares.isEmpty() || minPrimerTR1.isEmpty() || minSegundoTR1.isEmpty() || tiempoExtra.isEmpty() || penales.isEmpty()))
+            if(!(equipo1.isEmpty() || nombreEstadio.isEmpty() || fecha.isEmpty() || hora.isEmpty() || cantAficionados.isEmpty() || jugadoresSuplentes.isEmpty() || jugadoresTitulares.isEmpty() || minPrimerTR.isEmpty() || minSegundoTR.isEmpty()))
             {
                 //--LOGIC SIGUIENTE EQUIPO
                 //--Valido que este bien la informacion insertada
@@ -539,19 +554,19 @@ public class ControladorPrincipal
                 String[] formatoFecha = fecha.split("/");
                 for (String string : formatoFecha) {
                     if(isInteger(string)){
-                        //Validar...
+                        setFecha_partido(string);
                     }else{
                         JOptionPane.showMessageDialog(null, "La fecha esta con un formato erroneo \nDigitela con este formato:\n día/mes/año");
                         return 1;
                     }
                 }
-                setFecha_partido(fecha);
-                //Valido formato hora, validar los dos puntos ":"
-                setHora_partido(hora);
-                
-                //Seteo clasificatoria
-                setGrupo_clasificatoria(grupoC);
-                
+                //Valido formato hora
+                if(isInteger(hora)){
+                    setHora_partido(hora);
+                }else{
+                    JOptionPane.showMessageDialog(null, "La fecha esta con un formato erroneo \nDigitela con este formato:\n Un # entre 0 a 9");
+                    return 1;
+                }
                 //Valido que este dato sea un numero
                 if(isInteger(cantAficionados)){
                     setCantidad_aficionados(cantAficionados);
@@ -582,17 +597,13 @@ public class ControladorPrincipal
                 }
                 
                 //Validos primerTiempoRepo 
-                setPrimerTiempoRepMin(minPrimerTR1);
+                setPrimerTiempoRepMin(minPrimerTR);
                 
                 //Valido segTiempoR  
-                setSegundoTiempoRepMin(minSegundoTR1);                
+                setSegundoTiempoRepMin(minSegundoTR);                
 
                 //Se setea nadamas
                 setNombre_estadio(nombreEstadio);
-                
-                //Seteo tiempo extra y si hubo penales
-                setTiempo_extra(tiempoExtra);
-                setTieraron_penales(penales);
                 
                 JOptionPane.showMessageDialog(null, "Felicidades toda su información a insertar esta correcta.");
 
