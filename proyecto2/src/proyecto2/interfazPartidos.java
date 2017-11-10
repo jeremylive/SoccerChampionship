@@ -19,8 +19,6 @@ public class interfazPartidos extends javax.swing.JFrame
         
         this.control = controll;
     }
-    
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -142,9 +140,9 @@ public class interfazPartidos extends javax.swing.JFrame
 
         jLabel7.setText("Cantidad aficionados:");
 
-        jLabel8.setText("Jugadores titulares:");
+        jLabel8.setText("Jugadores titulares (11):");
 
-        jLabel9.setText("Jugadores suplentes:");
+        jLabel9.setText("Jugadores suplentes (12):");
 
         ejecutarCrudPartido.setText("EjecutarCRUD");
         ejecutarCrudPartido.addActionListener(new java.awt.event.ActionListener() {
@@ -277,14 +275,6 @@ public class interfazPartidos extends javax.swing.JFrame
                         .addComponent(borrarTupla)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jugadoresTitulares))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jugadoresSuplentes, javax.swing.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -421,7 +411,15 @@ public class interfazPartidos extends javax.swing.JFrame
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                     .addComponent(jLabel15)
                                                     .addComponent(arbitroPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
-                            .addComponent(sigEquipo)))))
+                            .addComponent(sigEquipo)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel9))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jugadoresSuplentes, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+                            .addComponent(jugadoresTitulares)))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 422, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -580,7 +578,6 @@ public class interfazPartidos extends javax.swing.JFrame
             Logger.getLogger(interfazPartidos.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_sigEquipoActionPerformed
-
     private void cargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cargarActionPerformed
         try {      
             control.cargarEquipos(equipo1y2.getSelectedItem().toString(), nombreEstadio.getSelectedItem().toString(), fecha.getText(), hora.getText(), cantAficionados.getText(), jugadoresSuplentes.getText(), jugadoresTitulares.getText(),jugaronTiemposExtras.getSelectedItem().toString(), tiraronPenales.getSelectedItem().toString(), grupo_clasificatoria.getSelectedItem().toString(), primerTiempoR.getSelectedItem().toString(), segundoTiempoR.getSelectedItem().toString());
@@ -588,19 +585,12 @@ public class interfazPartidos extends javax.swing.JFrame
             Logger.getLogger(interfazPartidos.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_cargarActionPerformed
-
     private void ejecutarCrudPartidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ejecutarCrudPartidoActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_ejecutarCrudPartidoActionPerformed
-
     private void ejecutarAlbitroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ejecutarAlbitroActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_ejecutarAlbitroActionPerformed
-
     private void fechaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fechaActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_fechaActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField arbitroAsistente1;
     private javax.swing.JTextField arbitroAsistente2;

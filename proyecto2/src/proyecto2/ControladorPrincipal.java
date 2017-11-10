@@ -19,6 +19,7 @@ public class ControladorPrincipal
     private ResultSetMetaData metaDatos;
     private Statement statement;
     private Connection connection;
+    private int numero_partido=0;
     
     //Variables de PartidoCRUD
     private String equipo_1;
@@ -136,8 +137,6 @@ public class ControladorPrincipal
         this.connection = connection;
     }
     
-    
-
     public ArrayList<String> getEquiposMundial() {
         return equiposMundial;
     }
@@ -358,10 +357,17 @@ public class ControladorPrincipal
         this.arbitro_5to = arbitro_5to;
     }
     
-    
-    
-    
     //Funciones
+    public boolean isInteger(String cadena)
+    {
+        try{
+            Integer.parseInt(cadena);
+            return true;
+        }catch(NumberFormatException e){
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
     
     public void query02()
     {
@@ -370,43 +376,56 @@ public class ControladorPrincipal
     
     public void queryPartido() throws SQLException 
     {   
-        int numero_partido=0;
-        
         //Variables a usar en la funcion de partidos, total partidos 64
         String insercionHacer = "";
         
-        //Verifico que este conectado a la BD
+        //Hago conexion
         connection = Conexion.getConexion();
         statement = connection.createStatement();  
-        //Empiezo las inserciones de partidos. to_date('10:10:00', 'HH:MI:SS')
-            insercionHacer+=numero_partido+", '"+getGrupo_clasificatoria()+"', "+"TO_DATE('"+getFecha_partido()+"', 'DD/MM/YYYY'), "+"TO_DATE('"+getHora_partido()+"', 'hh24:mi')"+", "+getCantidad_aficionados()+", "+getPrimerTiempoRepMin()+", "+getSegundoTiempoRepMin()+", '"+getTiempo_extra()+"', '"+getNombre_estadio()+"', '"+getTieraron_penales()+"'";
         
-        //vALIDAS ""....
-        String insertPartido = "INSERT INTO JLIVE.PARTIDO (NUMERO_PARTIDO, ETAPA_CLASIFICATORIA, FECHA, HORA, CANTIDAD_AFICIONADOS, MIN_REPO_PRIMER_TIEMPO, MIN_REPO_SEGUNDO_TIEMPO, SEJUGOTIEMPOEXTRA, NOMBRE_ESTADIO, HUBOPENALES) VALUES ("+insercionHacer+")";
+        insercionHacer += numero_partido+", '"+getGrupo_clasificatoria()+"', "+"TO_DATE('"+getFecha_partido()+"', 'DD/MM/YY'), "+
+                "TO_DATE('"+getHora_partido()+"', 'hh24:mi')"+", "+getCantidad_aficionados()+", "+getPrimerTiempoRepMin()+", "+
+                getSegundoTiempoRepMin()+", '"+getTiempo_extra()+"', '"+getNombre_estadio()+"', '"+getTieraron_penales()+"'";
+        
+        String insertPartido = "INSERT INTO JLIVE.PARTIDO (NUMERO_PARTIDO, ETAPA_CLASIFICATORIA, FECHA, HORA, CANTIDAD_AFICIONADOS,"+
+                " MIN_REPO_PRIMER_TIEMPO, MIN_REPO_SEGUNDO_TIEMPO, SEJUGOTIEMPOEXTRA, NOMBRE_ESTADIO, HUBOPENALES) VALUES ("+insercionHacer+")";
         System.out.println(insertPartido);
+        
         //Inserto partidos
         statement.execute(insertPartido);
         getConnection().commit();
         
+        //
+        
         output = statement.executeQuery("SELECT * FROM PARTIDO");
         while(output.next())
         {
-            System.out.println("numeroPartido: "+output.getString(1)+"\netapa_clasi: "+output.getString(2)+"\nfecha: "+output.getString(3)+"\nhira: "+output.getString(4)+"\ncant_afici: "+output.getString(5)+"\nminRepoPrimer: "+output.getString(6)+"\nsegRepoSegun: "+output.getString(7)+"\nTextra: "+output.getString(8)+"\npenales: "+output.getString(9));
+            System.out.println("numeroPartido: "+output.getString(1)+"\netapa_clasi: "+output.getString(2)+"\nfecha: "+output.getString(3)+
+                    "\nhira: "+output.getString(4)+"\ncant_afici: "+output.getString(5)+"\nminRepoPrimer: "+output.getString(6)+
+                    "\nsegRepoSegun: "+output.getString(7)+"\nTextra: "+output.getString(8)+"\npenales: "+output.getString(9));
            
         }
         System.out.println("no entro...");
-        
     }
    
-    public int cargarEquipos(String equipo2, String nombreEstadio, String fecha, String hora, String cantAficionados, String jugadoresSuplentes, String jugadoresTitulares, String tiempoExtra, String tiraronPenales, String grupoC, String minPrimerTR, String minSegundoTR) throws SQLException
+    /**
+     * Funcion Inserto partido
+     * @return 1 si algo sale mal o 0 si todo bien
+     * @throws SQLException 
+     */
+    public int cargarEquipos(String equipo2, String nombreEstadio, String fecha, String hora, String cantAficionados, String jugadoresSuplentes, 
+            String jugadoresTitulares, String tiempoExtra, String tiraronPenales, String grupoC, String minPrimerTR, String minSegundoTR) 
+            throws SQLException
     {
+        //
         if(getContadorP() == 1)
             {
-            if(!(equipo2.isEmpty() || nombreEstadio.isEmpty() || fecha.isEmpty() || hora.isEmpty() || cantAficionados.isEmpty() || jugadoresSuplentes.isEmpty() || jugadoresTitulares.isEmpty() || minPrimerTR.isEmpty() || minSegundoTR.isEmpty() || tiempoExtra.isEmpty() || tiraronPenales.isEmpty()))
+            //
+            if(!(equipo2.isEmpty() || nombreEstadio.isEmpty() || fecha.isEmpty() || hora.isEmpty() || cantAficionados.isEmpty() || jugadoresSuplentes.isEmpty() || jugadoresTitulares.isEmpty() || minPrimerTR.isEmpty() || minSegundoTR.isEmpty() || tiempoExtra.isEmpty() || tiraronPenales.isEmpty() || grupoC.isEmpty()))
             {
-                //--LOGIC SIGUIENTE EQUIPO
-                //--Valido que este bien la informacion insertada
-                //Equipo no debe estar en este string de equipos insertados
+                //LOGIC SIGUIENTE EQUIPO                                    _1_
+                //Valido que este bien la informacion insertada               _2_
+                //Equipo no debe estar en este string de equipos insertados    _3_
                 for (int i = 0; i < equiposMundial.size(); i++) {
                     if(equiposMundial.get(i).equals(equipo2)){
                         JOptionPane.showMessageDialog(null, "El equipo seleccionado ya esta dentro del mundial\nIntentelo de nuevo");
@@ -426,11 +445,15 @@ public class ControladorPrincipal
                     }
                 }
                 //Valido formato hora, 00:00
-                setHora_partido(hora);
-                
-                //Seteo clasificatoria
-                setGrupo_clasificatoria(grupoC);
-                
+                String[] formatoHora = fecha.split(":");
+                for (String string : formatoHora) {
+                    if(isInteger(string)){
+                        setHora_partido(hora);
+                    }else{
+                        JOptionPane.showMessageDialog(null, "La hora esta con un formato erroneo \nDigitela con este formato:\n horas:minutos");
+                        return 1;
+                    }
+                }
                 //Valido que este dato sea un numero
                 if(isInteger(cantAficionados)){
                     setCantidad_aficionados(cantAficionados);
@@ -438,7 +461,7 @@ public class ControladorPrincipal
                     JOptionPane.showMessageDialog(null, "La fecha esta con un formato erroneo \nDigitela con este formato:\n Un # entre 0 a 1000 0 más");
                     return 1;
                 }
-                //Valido suplentes 12
+                //Valido suplentes 12  __-_
                 String[] jSuplentes = jugadoresSuplentes.split(", ");
                 int contadorJugador = 0;
                 for (String jSuplente : jSuplentes) {
@@ -448,8 +471,7 @@ public class ControladorPrincipal
                 if(contadorJugador <= 12){
                     setJugadores_suplentes(jugadoresSuplentes);
                 }
-                
-                //Valido titulares 11
+                //Valido titulares 11  __-_
                 String[] jTitulares = jugadoresTitulares.split(", ");
                 contadorJugador = 0;
                 for (String jSuplente : jSuplentes) {
@@ -459,17 +481,10 @@ public class ControladorPrincipal
                 if(contadorJugador == 11){
                     setJugadores_titulares(jugadoresTitulares);
                 }
-                
-                //Validos primerTiempoRepo 
+                setGrupo_clasificatoria(grupoC);
                 setPrimerTiempoRepMin(minPrimerTR);
-                
-                //Valido segTiempoR  
                 setSegundoTiempoRepMin(minSegundoTR);                
-
-                //Se setea nadamas
                 setNombre_estadio(nombreEstadio);
-                
-                //Seteo tiempo extra y si hubo penales
                 setTiempo_extra(tiempoExtra);
                 setTieraron_penales(tiraronPenales);
                 
@@ -485,12 +500,10 @@ public class ControladorPrincipal
                 if(getContadorMundial() == 48){
                     JOptionPane.showMessageDialog(null, "FELICIDADES, INSERTASTE 48 PARTIDOS");
                 }
-                
                 //restauro contador que lleva el orden de un partido 1 y 2 (0 y 1)
                 restaurarContadorP();
-                
+                //
                 JOptionPane.showMessageDialog(null, "Felicidades toda su información esta correcta.\nAcabas de insertar el partido numero : "+getContadorMundial());
-                
             } else {
                 JOptionPane.showMessageDialog(null, "Algún dato en la información no se inserto. \nPorfavor intentar nuevamente... -.-");
 
@@ -500,58 +513,49 @@ public class ControladorPrincipal
         }
         return 0;
     }
-    
-    public boolean isInteger(String cadena)
-    {
-        try{
-            Integer.parseInt(cadena);
-            return true;
-        }catch(NumberFormatException e){
-            System.out.println(e.getMessage());
-            return false;
-        }
-    }
-    
+
+    /**
+     * 
+     * @return
+     * @throws SQLException 
+     */
     public int sigEquipo(String equipo1, String nombreEstadio, String fecha, String hora, String cantAficionados, String jugadoresSuplentes, String jugadoresTitulares, String tiempoExtra, String penales, String grupoC, String minPrimerTR1, String minSegundoTR1) throws SQLException
     {
         if(getContadorP() == 0)
         {
             if(!(equipo1.isEmpty() || nombreEstadio.isEmpty() || fecha.isEmpty() || hora.isEmpty() || cantAficionados.isEmpty() || jugadoresSuplentes.isEmpty() || jugadoresTitulares.isEmpty() || minPrimerTR1.isEmpty() || minSegundoTR1.isEmpty() || tiempoExtra.isEmpty() || penales.isEmpty()))
             {
-                //--LOGIC SIGUIENTE EQUIPO
-                //--Valido que este bien la informacion insertada
-                //Equipo no debe estar en este string de equipos insertados
-                if(equiposMundial.size() == 0)
-                {
-                    setEquipo_1(equipo1);
-                }else{
-                    for (int i = 0; i < equiposMundial.size(); i++) {
-                        if(equiposMundial.get(i).equals(equipo1)){
-                            JOptionPane.showMessageDialog(null, "El equipo seleccionado ya esta dentro del mundial\nIntentelo de nuevo");
-                            return 1;
-                        } else {
-                            setEquipo_1(equipo1);
-                        }
-                    }   
-                }
-                             
+                //LOGIC SIGUIENTE EQUIPO                                    _1_
+                //Valido que este bien la informacion insertada               _2_
+                //Equipo no debe estar en este string de equipos insertados    _3_
+                for (int i = 0; i < equiposMundial.size(); i++) {
+                    if(equiposMundial.get(i).equals(equipo1)){
+                        JOptionPane.showMessageDialog(null, "El equipo seleccionado ya esta dentro del mundial\nIntentelo de nuevo");
+                        return 1;
+                    } else {
+                        setEquipo_1(equipo1);
+                    }
+                }                
                 //Valido formato fecha 
                 String[] formatoFecha = fecha.split("/");
                 for (String string : formatoFecha) {
                     if(isInteger(string)){
-                        //Validar...
+                        setFecha_partido(string);
                     }else{
                         JOptionPane.showMessageDialog(null, "La fecha esta con un formato erroneo \nDigitela con este formato:\n día/mes/año");
                         return 1;
                     }
                 }
-                setFecha_partido(fecha);
-                //Valido formato hora, validar los dos puntos ":"
-                setHora_partido(hora);
-                
-                //Seteo clasificatoria
-                setGrupo_clasificatoria(grupoC);
-                
+                //Valido formato hora, 00:00
+                String[] formatoHora = fecha.split(":");
+                for (String string : formatoHora) {
+                    if(isInteger(string)){
+                        setHora_partido(hora);
+                    }else{
+                        JOptionPane.showMessageDialog(null, "La hora esta con un formato erroneo \nDigitela con este formato:\n horas:minutos");
+                        return 1;
+                    }
+                }
                 //Valido que este dato sea un numero
                 if(isInteger(cantAficionados)){
                     setCantidad_aficionados(cantAficionados);
@@ -559,7 +563,7 @@ public class ControladorPrincipal
                     JOptionPane.showMessageDialog(null, "La fecha esta con un formato erroneo \nDigitela con este formato:\n Un # entre 0 a 1000 0 más");
                     return 1;
                 }
-                //Valido suplentes 12
+                //Valido suplentes 12  __-_
                 String[] jSuplentes = jugadoresSuplentes.split(", ");
                 int contadorJugador = 0;
                 for (String jSuplente : jSuplentes) {
@@ -569,8 +573,7 @@ public class ControladorPrincipal
                 if(contadorJugador <= 12){
                     setJugadores_suplentes(jugadoresSuplentes);
                 }
-                
-                //Valido titulares 11
+                //Valido titulares 11  __-_
                 String[] jTitulares = jugadoresTitulares.split(", ");
                 contadorJugador = 0;
                 for (String jSuplente : jSuplentes) {
@@ -580,31 +583,28 @@ public class ControladorPrincipal
                 if(contadorJugador == 11){
                     setJugadores_titulares(jugadoresTitulares);
                 }
-                
-                //Validos primerTiempoRepo 
+                setGrupo_clasificatoria(grupoC);
                 setPrimerTiempoRepMin(minPrimerTR1);
-                
-                //Valido segTiempoR  
                 setSegundoTiempoRepMin(minSegundoTR1);                
-
-                //Se setea nadamas
                 setNombre_estadio(nombreEstadio);
-                
-                //Seteo tiempo extra y si hubo penales
                 setTiempo_extra(tiempoExtra);
                 setTieraron_penales(penales);
                 
                 JOptionPane.showMessageDialog(null, "Felicidades toda su información a insertar esta correcta.");
 
                 //Hago QUERYS........... SQL
-                //-->inserto informacion a la tablas 
+                //->inserto informacion a la tablas 
                 queryPartido();
-                
-                //Borro los campor en la interfaz 
-
-
+                //Aumento el contador que lleva los partidos max 48
+                upContadorMundial();
+                //Valido si ya llego a 48
+                if(getContadorMundial() == 48){
+                    JOptionPane.showMessageDialog(null, "FELICIDADES, INSERTASTE 48 PARTIDOS");
+                }
                 //Siguiente: equipo2 a seguir escogiendo info....
                 aumentarContador();
+                //
+                JOptionPane.showMessageDialog(null, "Felicidades toda su información esta correcta.\nAcabas de insertar el partido numero : "+getContadorMundial());
             } else {
 
                 JOptionPane.showMessageDialog(null, "Algún dato en la información no se inserto. \nPorfavor intentar nuevamente... -.-");
