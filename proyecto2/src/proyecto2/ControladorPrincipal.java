@@ -6,9 +6,11 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 public class ControladorPrincipal 
 {
@@ -427,7 +429,7 @@ public class ControladorPrincipal
         connection = Conexion.getConexion();
         statement = connection.createStatement();  
         
-        insercionHacer += numero_partido+", '"+getGrupo_clasificatoria()+"', "+"TO_DATE('"+getFecha_partido()+"', 'DD/MM/YY'), "+
+        insercionHacer += numero_partido+", '"+getGrupo_clasificatoria()+"', "+"TO_DATE('"+getFecha_partido()+"', 'DD/MM/YYYY '), "+
                 "TO_DATE('"+getHora_partido()+"', 'hh24:mi')"+", "+getCantidad_aficionados()+", "+getPrimerTiempoRepMin()+", "+
                 getSegundoTiempoRepMin()+", '"+getTiempo_extra()+"', '"+getNombre_estadio()+"', '"+getTieraron_penales()+"'";
         
@@ -444,6 +446,7 @@ public class ControladorPrincipal
         String insertCUERPO_5to = "INSERT INTO CUERPO_ARBITRAL VALUES ("+numero_partido+","+getArbitro_5to()+",'Quinto')";
         
         //INSERTS A PARTIDO_CAMBIOS
+        
         */
         
         String insertPartido = "INSERT INTO PARTIDO (NUMERO_PARTIDO, ETAPA_CLASIFICATORIA, FECHA, HORA, CANTIDAD_AFICIONADOS, MIN_REPO_PRIMER_TIEMPO, MIN_REPO_SEGUNDO_TIEMPO, SEJUGOTIEMPOEXTRA, NOMBRE_ESTADIO, HUBOPENALES)\n"
@@ -461,15 +464,25 @@ public class ControladorPrincipal
         //
         
         output = statement.executeQuery("SELECT * FROM PARTIDO");
+        metaDatos = output.getMetaData();
+        int index = metaDatos.getColumnCount();
+        
+        DefaultTableModel modelo = getRegister().getTablaModel();   //Obtengo la tabla de la Base de datos para poder agregarla
+        modelo.setRowCount(0);
+        
         while(output.next())
         {
             System.out.println("numeroPartido: "+output.getString(1)+"\netapa_clasi: "+output.getString(2)+"\nfecha: "+output.getString(3)+
                     "\nhira: "+output.getString(4)+"\ncant_afici: "+output.getString(5)+"\nminRepoPrimer: "+output.getString(6)+
                     "\nsegRepoSegun: "+output.getString(7)+"\nTextra: "+output.getString(8)+"\npenales: "+output.getString(9));
-            System.out.println("numeroPartido: "+output.getString(1)+"\netapa_clasi: "+output.getString(2)+"\nfecha: "+output.getDate(3)+
-                    "\nhira: "+output.getDate(4)+"\ncant_afici: "+output.getDate(5)+"\nminRepoPrimer: "+output.getDate(6)+
-                    "\nsegRepoSegun: "+output.getDate(7)+"\nTextra: "+output.getDate(8)+"\npenales: "+output.getDate(9));
-           
+            
+            //--
+            Vector vector = new Vector();   //Datos tabla
+            for (int i = 1; i < index; i++) {
+                vector.add(output.getString(i));
+            }
+            
+            
         }
         System.out.println("no entro...");
     }
