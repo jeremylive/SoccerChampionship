@@ -451,9 +451,8 @@ public class ControladorPrincipal
         System.out.println(insertPartido);
         
         //Empiezo las inserciones de partidos
-        insercionHacer+=numero_partido+", "+getGrupo_clasificatoria()+", "+getFecha_partido()+", "+getHora_partido()+", "+getCantidad_aficionados()+", "+primerTiempoRepMin+", "+segundoTiempoRepMin+", "+tiempo_extra+", "+getTieraron_penales();
-        
-        
+        insercionHacer += numero_partido+", "+getGrupo_clasificatoria()+", "+getFecha_partido()+", "+getHora_partido()+", "+
+                getCantidad_aficionados()+", "+primerTiempoRepMin+", "+segundoTiempoRepMin+", "+tiempo_extra+", "+getTieraron_penales();
         
         //Inserto partidos
         statement.executeUpdate(insertPartido);
@@ -467,7 +466,9 @@ public class ControladorPrincipal
             System.out.println("numeroPartido: "+output.getString(1)+"\netapa_clasi: "+output.getString(2)+"\nfecha: "+output.getString(3)+
                     "\nhira: "+output.getString(4)+"\ncant_afici: "+output.getString(5)+"\nminRepoPrimer: "+output.getString(6)+
                     "\nsegRepoSegun: "+output.getString(7)+"\nTextra: "+output.getString(8)+"\npenales: "+output.getString(9));
-            System.out.println("numeroPartido: "+output.getString(1)+"\netapa_clasi: "+output.getString(2)+"\nfecha: "+output.getDate(3)+"\nhira: "+output.getDate(4)+"\ncant_afici: "+output.getDate(5)+"\nminRepoPrimer: "+output.getDate(6)+"\nsegRepoSegun: "+output.getDate(7)+"\nTextra: "+output.getDate(8)+"\npenales: "+output.getDate(9));
+            System.out.println("numeroPartido: "+output.getString(1)+"\netapa_clasi: "+output.getString(2)+"\nfecha: "+output.getDate(3)+
+                    "\nhira: "+output.getDate(4)+"\ncant_afici: "+output.getDate(5)+"\nminRepoPrimer: "+output.getDate(6)+
+                    "\nsegRepoSegun: "+output.getDate(7)+"\nTextra: "+output.getDate(8)+"\npenales: "+output.getDate(9));
            
         }
         System.out.println("no entro...");
@@ -510,7 +511,6 @@ public class ControladorPrincipal
                         return 1;
                     }
                 }
-                
                 //Valido formato hora, 00:00
                 String[] formatoHora = fecha.split(":");
                 for (String string : formatoHora) {
@@ -520,13 +520,6 @@ public class ControladorPrincipal
                         JOptionPane.showMessageDialog(null, "La hora esta con un formato erroneo \nDigitela con este formato:\n horas:minutos");
                         return 1;
                     }
-                }
-                
-                if(isInteger(hora)){
-                    setHora_partido(hora);
-                }else{
-                    JOptionPane.showMessageDialog(null, "La fecha esta con un formato erroneo \nDigitela con este formato:\n Un # entre 0 a 9");
-                    return 1;
                 }
                 //Valido que este dato sea un numero
                 if(isInteger(cantAficionados)){
@@ -567,15 +560,14 @@ public class ControladorPrincipal
                 //Hago QUERYS........... SQL
                 //-->inserto informacion a la tablas 
                 queryPartido();
-                
+                //restauro contador que lleva el orden de un partido 1 y 2 (0 y 1)
+                restaurarContadorP();
                 //Aumento el contador que lleva los partidos max 48
                 upContadorMundial();
                 //Valido si ya llego a 48
                 if(getContadorMundial() == 48){
                     JOptionPane.showMessageDialog(null, "FELICIDADES, INSERTASTE 48 PARTIDOS");
                 }
-                //restauro contador que lleva el orden de un partido 1 y 2 (0 y 1)
-                restaurarContadorP();
                 //
                 JOptionPane.showMessageDialog(null, "Felicidades toda su información esta correcta.\nAcabas de insertar el partido numero : "+getContadorMundial());
             } else {
@@ -593,12 +585,13 @@ public class ControladorPrincipal
      * @return
      * @throws SQLException 
      */
-    public int sigEquipo(String equipo1, String nombreEstadio, String fecha, String hora, String cantAficionados, String jugadoresSuplentes, String jugadoresTitulares, String tiempoExtra, String penales, String grupoC, String minPrimerTR1, String minSegundoTR1) throws SQLException
-    //public int sigEquipo(String equipo1, String nombreEstadio, String fecha, String hora, String cantAficionados, String jugadoresSuplentes, String jugadoresTitulares, String minPrimerTR, String minSegundoTR, String grupoC) throws SQLException
-    {
+    public int sigEquipo(String equipo1, String nombreEstadio, String fecha, String hora, String cantAficionados, 
+            String jugadoresSuplentes, String jugadoresTitulares, String grupoC, String minPrimerTR1, String minSegundoTR1) 
+            throws SQLException
+     {
         if(getContadorP() == 0)
         {
-            if(!(equipo1.isEmpty() || nombreEstadio.isEmpty() || fecha.isEmpty() || hora.isEmpty() || cantAficionados.isEmpty() || jugadoresSuplentes.isEmpty() || jugadoresTitulares.isEmpty() || minPrimerTR1.isEmpty() || minSegundoTR1.isEmpty()))
+            if(!(equipo1.isEmpty() || nombreEstadio.isEmpty() || fecha.isEmpty() || hora.isEmpty() || cantAficionados.isEmpty() || jugadoresSuplentes.isEmpty() || jugadoresTitulares.isEmpty() || minPrimerTR1.isEmpty() || minSegundoTR1.isEmpty() || grupoC.isEmpty()))
             {
                 //LOGIC SIGUIENTE EQUIPO                                    _1_
                 //Valido que este bien la informacion insertada               _2_
@@ -631,13 +624,6 @@ public class ControladorPrincipal
                         return 1;
                     }
                 }
-                //Valido formato hora
-                if(isInteger(hora)){
-                    setHora_partido(hora);
-                }else{
-                    JOptionPane.showMessageDialog(null, "La fecha esta con un formato erroneo \nDigitela con este formato:\n Un # entre 0 a 9");
-                    return 1;
-                }
                 //Valido que este dato sea un numero
                 if(isInteger(cantAficionados)){
                     setCantidad_aficionados(cantAficionados);
@@ -669,31 +655,20 @@ public class ControladorPrincipal
                 setPrimerTiempoRepMin(minPrimerTR1);
                 setSegundoTiempoRepMin(minSegundoTR1);                
                 setNombre_estadio(nombreEstadio);
-                //setTiempo_extra(tiempoExtra);
-                //setTieraron_penales(penales);
-                
-                //Validos primerTiempoRepo 
-                setPrimerTiempoRepMin(minPrimerTR1);
-                
-                //Valido segTiempoR  
-                setSegundoTiempoRepMin(minSegundoTR1);                
-
-                //Se setea nadamas
-                setNombre_estadio(nombreEstadio);
                 
                 JOptionPane.showMessageDialog(null, "Felicidades toda su información a insertar esta correcta.");
 
                 //Hago QUERYS........... SQL
                 //->inserto informacion a la tablas 
                 queryPartido();
+                //Siguiente: equipo2 a seguir escogiendo info....
+                aumentarContador();
                 //Aumento el contador que lleva los partidos max 48
                 upContadorMundial();
                 //Valido si ya llego a 48
                 if(getContadorMundial() == 48){
                     JOptionPane.showMessageDialog(null, "FELICIDADES, INSERTASTE 48 PARTIDOS");
                 }
-                //Siguiente: equipo2 a seguir escogiendo info....
-                aumentarContador();
                 //
                 JOptionPane.showMessageDialog(null, "Felicidades toda su información esta correcta.\nAcabas de insertar el partido numero : "+getContadorMundial());
             } else {
