@@ -6,6 +6,8 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 public class ControladorPrincipal 
@@ -374,6 +376,48 @@ public class ControladorPrincipal
 
     }
     
+    public void queryEquiposPorConfed(String codConfed) throws SQLException
+    {
+        String query = "SELECT CONFEDERACIONESFUTBOL.CODIGO,EQUIPO.NOMBRE FROM EQUIPO JOIN CONFEDERACIONESFUTBOL ON CONFEDERACIONESFUTBOL.CODIGO = EQUIPO.CODIGO_CONF ";
+        if(!codConfed.equals("*"))
+            query += "WHERE CONFEDERACIONESFUTBOL.CODIGO = "+codConfed;
+        query+=" ORDER BY CONFEDERACIONESFUTBOL.CODIGO,EQUIPO.NOMBRE";
+        
+        String confederacionActual = "";
+        //Ejecuto el query
+        output = statement.executeQuery(query);
+        while(output.next())
+        {
+            if(confederacionActual.equals("")||!confederacionActual.equals(output.getString(1))) {
+                System.out.println(output.getString(1));
+            }
+            System.out.println(output.getString(2));
+        }
+        System.out.println("no entro...");
+    }
+    
+    public void queryGoleadores() throws SQLException
+    {
+        //Hago conexion
+        connection = Conexion.getConexion();
+        statement = connection.createStatement(); 
+        
+        String query = "SELECT NOMBRE,APELLIDO1,APELLIDO2,JUGADOR.CODIGO_EQUIPO,count(NUMERO_PARTIDO) FROM PARTIDO_GOLES "
+                + "JOIN JUGADOR ON PARTIDO_GOLES.NUMERO_PASAPORTE = JUGADOR.NUMERO_PASAPORTE "
+                + "JOIN PERSONA ON JUGADOR.NUMERO_PASAPORTE = PERSONA.NUM_PASAPORTE "
+                + "GROUP BY NOMBRE,APELLIDO1,APELLIDO2,JUGADOR.CODIGO_EQUIPO "
+                + "ORDER BY count(NUMERO_PARTIDO) DESC,NOMBRE,APELLIDO1,APELLIDO2";
+        //Ejecuto el query
+        int posicion = 1;
+        output = statement.executeQuery(query);
+        while(output.next())
+        {
+            System.out.println("Posicion:"+posicion+"   Nombre:"+output.getString(1)+"   Apellido1:"+output.getString(2)+"   Apellido2:"+output.getString(3)+"   Equipo:"+output.getString(4)+"   Goles:"+output.getString(5));
+            posicion++;
+        }
+        System.out.println("no entro...");
+    }
+    
     public void queryPartido() throws SQLException 
     {   
         //Variables a usar en la funcion de partidos, total partidos 64
@@ -382,24 +426,35 @@ public class ControladorPrincipal
         //Hago conexion
         connection = Conexion.getConexion();
         statement = connection.createStatement();  
-<<<<<<< HEAD
         
         insercionHacer += numero_partido+", '"+getGrupo_clasificatoria()+"', "+"TO_DATE('"+getFecha_partido()+"', 'DD/MM/YY'), "+
                 "TO_DATE('"+getHora_partido()+"', 'hh24:mi')"+", "+getCantidad_aficionados()+", "+getPrimerTiempoRepMin()+", "+
                 getSegundoTiempoRepMin()+", '"+getTiempo_extra()+"', '"+getNombre_estadio()+"', '"+getTieraron_penales()+"'";
         
-        String insertPartido = "INSERT INTO JLIVE.PARTIDO (NUMERO_PARTIDO, ETAPA_CLASIFICATORIA, FECHA, HORA, CANTIDAD_AFICIONADOS,"+
-                " MIN_REPO_PRIMER_TIEMPO, MIN_REPO_SEGUNDO_TIEMPO, SEJUGOTIEMPOEXTRA, NOMBRE_ESTADIO, HUBOPENALES) VALUES ("+insercionHacer+")";
+        /*
+        //Inserts a PARTIDO_PARTICIPA
+        String insertPARTICIPA_Equipo1 = "INSERT INTO PARTIDO_PARTICIPA VALUES ("+numero_partido+","+getEquipo_1()+")";
+        String insertPARTICIPA_Equipo2 = "INSERT INTO PARTIDO_PARTICIPA VALUES ("+numero_partido+","+getEquipo_2()+")";
+        
+        //INSERTS A CUERPO_ARBITRAL
+        String insertCUERPO_Principal = "INSERT INTO CUERPO_ARBITRAL VALUES ("+numero_partido+","+getArbitro_principal()+",'Principal')";
+        String insertCUERPO_Asist1 = "INSERT INTO CUERPO_ARBITRAL VALUES ("+numero_partido+","+getArbitro_asistente_1()+",'Asistente')";
+        String insertCUERPO_Asist2 = "INSERT INTO CUERPO_ARBITRAL VALUES ("+numero_partido+","+getArbitro_asistente_2()+",'Asistente')";
+        String insertCUERPO_4to = "INSERT INTO CUERPO_ARBITRAL VALUES ("+numero_partido+","+getArbitro_4to()+",'Cuarto')";
+        String insertCUERPO_5to = "INSERT INTO CUERPO_ARBITRAL VALUES ("+numero_partido+","+getArbitro_5to()+",'Quinto')";
+        
+        //INSERTS A PARTIDO_CAMBIOS
+        */
+        
+        String insertPartido = "INSERT INTO PARTIDO (NUMERO_PARTIDO, ETAPA_CLASIFICATORIA, FECHA, HORA, CANTIDAD_AFICIONADOS, MIN_REPO_PRIMER_TIEMPO, MIN_REPO_SEGUNDO_TIEMPO, SEJUGOTIEMPOEXTRA, NOMBRE_ESTADIO, HUBOPENALES)\n"
+                    + "VALUES ("+insercionHacer+")";
         System.out.println(insertPartido);
         
-=======
         //Empiezo las inserciones de partidos
         insercionHacer+=numero_partido+", "+getGrupo_clasificatoria()+", "+getFecha_partido()+", "+getHora_partido()+", "+getCantidad_aficionados()+", "+primerTiempoRepMin+", "+segundoTiempoRepMin+", "+tiempo_extra+", "+getTieraron_penales();
         
-        String insertPartido = "INSERT INTO PARTIDO (NUMERO_PARTIDO, ETAPA_CLASIFICATORIA, FECHA, HORA, CANTIDAD_AFICIONADOS, MIN_REPO_PRIMER_TIEMPO, MIN_REPO_SEGUNDO_TIEMPO, SEJUGOTIEMPOEXTRA, NOMBRE_ESTADIO, HUBOPENALES)\n" +
-        "VALUES ("+insercionHacer+")";
         
->>>>>>> 8dc41bf97c9be2ea81deb14d5a87d10a17697e54
+        
         //Inserto partidos
         statement.executeUpdate(insertPartido);
         getConnection().commit();
@@ -409,59 +464,30 @@ public class ControladorPrincipal
         output = statement.executeQuery("SELECT * FROM PARTIDO");
         while(output.next())
         {
-<<<<<<< HEAD
             System.out.println("numeroPartido: "+output.getString(1)+"\netapa_clasi: "+output.getString(2)+"\nfecha: "+output.getString(3)+
                     "\nhira: "+output.getString(4)+"\ncant_afici: "+output.getString(5)+"\nminRepoPrimer: "+output.getString(6)+
                     "\nsegRepoSegun: "+output.getString(7)+"\nTextra: "+output.getString(8)+"\npenales: "+output.getString(9));
-=======
             System.out.println("numeroPartido: "+output.getString(1)+"\netapa_clasi: "+output.getString(2)+"\nfecha: "+output.getDate(3)+"\nhira: "+output.getDate(4)+"\ncant_afici: "+output.getDate(5)+"\nminRepoPrimer: "+output.getDate(6)+"\nsegRepoSegun: "+output.getDate(7)+"\nTextra: "+output.getDate(8)+"\npenales: "+output.getDate(9));
->>>>>>> 8dc41bf97c9be2ea81deb14d5a87d10a17697e54
            
         }
         System.out.println("no entro...");
     }
-<<<<<<< HEAD
    
     /**
      * Funcion Inserto partido
      * @return 1 si algo sale mal o 0 si todo bien
      * @throws SQLException 
      */
-    public int cargarEquipos(String equipo2, String nombreEstadio, String fecha, String hora, String cantAficionados, String jugadoresSuplentes, 
-            String jugadoresTitulares, String tiempoExtra, String tiraronPenales, String grupoC, String minPrimerTR, String minSegundoTR) 
-            throws SQLException
-=======
     
-    public void queryEquiposPorConfed(String codConfed) throws SQLException
-    {
-        String query;
-        if(codConfed.equals("*"))
-            query = "SELECT CONFEDERACIONESFUTBOL.CODIGO,EQUIPO.NOMBRE FROM EQUIPO JOIN CONFEDERACIONESFUTBOL ON CONFEDERACIONESFUTBOL.CODIGO = EQUIPO.CODIGO_CONF ORDER BY CONFEDERACIONESFUTBOL.CODIGO,EQUIPO.NOMBRE"; 
-        else
-            query = "SELECT CONFEDERACIONESFUTBOL.CODIGO,EQUIPO.NOMBRE FROM EQUIPO JOIN CONFEDERACIONESFUTBOL ON CONFEDERACIONESFUTBOL.CODIGO = EQUIPO.CODIGO_CONF WHERE CONFEDERACIONESFUTBOL.CODIGO = "+codConfed+" ORDER BY EQUIPO.NOMBRE";
-        
-        //Ejecuto el query
-        output = statement.executeQuery(query);
-        while(output.next())
-        {
-            System.out.println("Confederacion: "+output.getString(1)+"  Pais: "+output.getString(2));
-        }
-        System.out.println("no entro...");
-    }
-    
-    
-    public int cargarEquipos(String equipo2, String nombreEstadio, String fecha, String hora, String cantAficionados, String jugadoresSuplentes, String jugadoresTitulares, String minPrimerTR, String minSegundoTR, String grupoC) throws SQLException
->>>>>>> 8dc41bf97c9be2ea81deb14d5a87d10a17697e54
+    //public int cargarEquipos(String equipo2, String nombreEstadio, String fecha, String hora, String cantAficionados, String jugadoresSuplentes, String jugadoresTitulares, String minPrimerTR, String minSegundoTR, String grupoC) throws SQLException    
+    public int cargarEquipos(String equipo2, String nombreEstadio, String fecha, String hora, String cantAficionados, String jugadoresSuplentes, String jugadoresTitulares, String tiempoExtra, String tiraronPenales, String grupoC, String minPrimerTR, String minSegundoTR) throws SQLException
     {
         //
         if(getContadorP() == 1)
             {
-<<<<<<< HEAD
             //
-            if(!(equipo2.isEmpty() || nombreEstadio.isEmpty() || fecha.isEmpty() || hora.isEmpty() || cantAficionados.isEmpty() || jugadoresSuplentes.isEmpty() || jugadoresTitulares.isEmpty() || minPrimerTR.isEmpty() || minSegundoTR.isEmpty() || tiempoExtra.isEmpty() || tiraronPenales.isEmpty() || grupoC.isEmpty()))
-=======
+            //if(!(equipo2.isEmpty() || nombreEstadio.isEmpty() || fecha.isEmpty() || hora.isEmpty() || cantAficionados.isEmpty() || jugadoresSuplentes.isEmpty() || jugadoresTitulares.isEmpty() || minPrimerTR.isEmpty() || minSegundoTR.isEmpty() || tiempoExtra.isEmpty() || tiraronPenales.isEmpty() || grupoC.isEmpty()))
             if(!(equipo2.isEmpty() || nombreEstadio.isEmpty() || fecha.isEmpty() || hora.isEmpty() || cantAficionados.isEmpty() || jugadoresSuplentes.isEmpty() || jugadoresTitulares.isEmpty() || minPrimerTR.isEmpty() || minSegundoTR.isEmpty()))
->>>>>>> 8dc41bf97c9be2ea81deb14d5a87d10a17697e54
             {
                 //LOGIC SIGUIENTE EQUIPO                                    _1_
                 //Valido que este bien la informacion insertada               _2_
@@ -484,8 +510,8 @@ public class ControladorPrincipal
                         return 1;
                     }
                 }
+                
                 //Valido formato hora, 00:00
-<<<<<<< HEAD
                 String[] formatoHora = fecha.split(":");
                 for (String string : formatoHora) {
                     if(isInteger(string)){
@@ -494,13 +520,13 @@ public class ControladorPrincipal
                         JOptionPane.showMessageDialog(null, "La hora esta con un formato erroneo \nDigitela con este formato:\n horas:minutos");
                         return 1;
                     }
-=======
+                }
+                
                 if(isInteger(hora)){
                     setHora_partido(hora);
                 }else{
                     JOptionPane.showMessageDialog(null, "La fecha esta con un formato erroneo \nDigitela con este formato:\n Un # entre 0 a 9");
                     return 1;
->>>>>>> 8dc41bf97c9be2ea81deb14d5a87d10a17697e54
                 }
                 //Valido que este dato sea un numero
                 if(isInteger(cantAficionados)){
@@ -533,11 +559,8 @@ public class ControladorPrincipal
                 setPrimerTiempoRepMin(minPrimerTR);
                 setSegundoTiempoRepMin(minSegundoTR);                
                 setNombre_estadio(nombreEstadio);
-<<<<<<< HEAD
                 setTiempo_extra(tiempoExtra);
                 setTieraron_penales(tiraronPenales);
-=======
->>>>>>> 8dc41bf97c9be2ea81deb14d5a87d10a17697e54
                 
                 JOptionPane.showMessageDialog(null, "Felicidades toda su información a insertar esta correcta.");
 
@@ -564,7 +587,6 @@ public class ControladorPrincipal
         }
         return 0;
     }
-<<<<<<< HEAD
 
     /**
      * 
@@ -572,25 +594,11 @@ public class ControladorPrincipal
      * @throws SQLException 
      */
     public int sigEquipo(String equipo1, String nombreEstadio, String fecha, String hora, String cantAficionados, String jugadoresSuplentes, String jugadoresTitulares, String tiempoExtra, String penales, String grupoC, String minPrimerTR1, String minSegundoTR1) throws SQLException
-=======
-    
-    public boolean isInteger(String cadena)
-    {
-        try{
-            Integer.parseInt(cadena);
-            return true;
-        }catch(NumberFormatException e){
-            System.out.println(e.getMessage());
-            return false;
-        }
-    }
-    
-    public int sigEquipo(String equipo1, String nombreEstadio, String fecha, String hora, String cantAficionados, String jugadoresSuplentes, String jugadoresTitulares, String minPrimerTR, String minSegundoTR, String grupoC) throws SQLException
->>>>>>> 8dc41bf97c9be2ea81deb14d5a87d10a17697e54
+    //public int sigEquipo(String equipo1, String nombreEstadio, String fecha, String hora, String cantAficionados, String jugadoresSuplentes, String jugadoresTitulares, String minPrimerTR, String minSegundoTR, String grupoC) throws SQLException
     {
         if(getContadorP() == 0)
         {
-            if(!(equipo1.isEmpty() || nombreEstadio.isEmpty() || fecha.isEmpty() || hora.isEmpty() || cantAficionados.isEmpty() || jugadoresSuplentes.isEmpty() || jugadoresTitulares.isEmpty() || minPrimerTR.isEmpty() || minSegundoTR.isEmpty()))
+            if(!(equipo1.isEmpty() || nombreEstadio.isEmpty() || fecha.isEmpty() || hora.isEmpty() || cantAficionados.isEmpty() || jugadoresSuplentes.isEmpty() || jugadoresTitulares.isEmpty() || minPrimerTR1.isEmpty() || minSegundoTR1.isEmpty()))
             {
                 //LOGIC SIGUIENTE EQUIPO                                    _1_
                 //Valido que este bien la informacion insertada               _2_
@@ -613,7 +621,6 @@ public class ControladorPrincipal
                         return 1;
                     }
                 }
-<<<<<<< HEAD
                 //Valido formato hora, 00:00
                 String[] formatoHora = fecha.split(":");
                 for (String string : formatoHora) {
@@ -623,14 +630,13 @@ public class ControladorPrincipal
                         JOptionPane.showMessageDialog(null, "La hora esta con un formato erroneo \nDigitela con este formato:\n horas:minutos");
                         return 1;
                     }
-=======
+                }
                 //Valido formato hora
                 if(isInteger(hora)){
                     setHora_partido(hora);
                 }else{
                     JOptionPane.showMessageDialog(null, "La fecha esta con un formato erroneo \nDigitela con este formato:\n Un # entre 0 a 9");
                     return 1;
->>>>>>> 8dc41bf97c9be2ea81deb14d5a87d10a17697e54
                 }
                 //Valido que este dato sea un numero
                 if(isInteger(cantAficionados)){
@@ -652,31 +658,28 @@ public class ControladorPrincipal
                 //Valido titulares 11  __-_
                 String[] jTitulares = jugadoresTitulares.split(", ");
                 contadorJugador = 0;
-                for (String jSuplente : jSuplentes) {
+                for (String jTitular : jTitulares) {
                     contadorJugador++;
                 }
                 //Partido de 11 jugadores
                 if(contadorJugador == 11){
                     setJugadores_titulares(jugadoresTitulares);
                 }
-<<<<<<< HEAD
                 setGrupo_clasificatoria(grupoC);
                 setPrimerTiempoRepMin(minPrimerTR1);
                 setSegundoTiempoRepMin(minSegundoTR1);                
                 setNombre_estadio(nombreEstadio);
-                setTiempo_extra(tiempoExtra);
-                setTieraron_penales(penales);
-=======
+                //setTiempo_extra(tiempoExtra);
+                //setTieraron_penales(penales);
                 
                 //Validos primerTiempoRepo 
-                setPrimerTiempoRepMin(minPrimerTR);
+                setPrimerTiempoRepMin(minPrimerTR1);
                 
                 //Valido segTiempoR  
-                setSegundoTiempoRepMin(minSegundoTR);                
+                setSegundoTiempoRepMin(minSegundoTR1);                
 
                 //Se setea nadamas
                 setNombre_estadio(nombreEstadio);
->>>>>>> 8dc41bf97c9be2ea81deb14d5a87d10a17697e54
                 
                 JOptionPane.showMessageDialog(null, "Felicidades toda su información a insertar esta correcta.");
 
@@ -703,15 +706,13 @@ public class ControladorPrincipal
         return 0;
     } 
     
-    //##----------------------
-    
-    public void equiposCof()
+    //--------------Equipos por Confederacion------------------------
+    public void equiposCof() throws SQLException
     {
         JOptionPane.showMessageDialog(null, "ACABAS DE HACER LA CONSULTA: EQUIPOS PARTICIPANTES POR CONFEDERACIÓN");
-        
         //LOGIC
         //##--
-        
+        queryEquiposPorConfed("*");
         //Total de confederaciones
         
         //Dividir en grupos por confederaciones
@@ -721,25 +722,30 @@ public class ControladorPrincipal
         //Fin de la operación...    
     }
     
+    //----------------------Informacion del partido---------------------------
     public void infoPartido()
     {
         JOptionPane.showMessageDialog(null, "ACABAS DE HACER LA CONSULTA: INFORME OFICIAL DEL PARTIDO");
     }
     
+    //----------------------
     public void grupoClasificaciones()
     {
         JOptionPane.showMessageDialog(null, "ACABAS DE HACER LA CONSULTA: GRUPOS Y CLASIFICACIONES");
                 
     }
     
+    //-----------------------TablaPosicionesGenerales------------------------
     public void posicionesGenerales()
     {
         JOptionPane.showMessageDialog(null, "ACABAS DE HACER LA CONSULTA: TABLA GENERAL DE POSICIONES");
     }
     
-    public void goleadores()
+    //-----------------------TablaGoleadores---------------------------------
+    public void goleadores() throws SQLException
     {
         JOptionPane.showMessageDialog(null, "ACABAS DE HACER LA CONSULTA: TABLA DE GOLEADORES");
+        queryGoleadores();
     }
     
     
@@ -748,24 +754,30 @@ public class ControladorPrincipal
         //Seteo la option a la variable global
         setOption(operacion);
         //Menu de control para las opciones deisponibles
-        switch(getOption()){
-            case "EQUIPOS PARTICIPANTES POR CONFEDERACIÓN":  
-                equiposCof();
-                break;
-            case "INFORME OFICIAL DEL PARTIDO":
-                infoPartido();
-                break;
-            case "GRUPOS Y CLASIFICACIONES":
-                grupoClasificaciones();
-                break;                        
-            case "TABLA GENERAL DE POSICIONES":
-                posicionesGenerales();
-                break;
-            case "TABLA DE GOLEADORES":
-                goleadores();
-                break;
-            default:
+        try {
+            switch(getOption()){
+                case "EQUIPOS PARTICIPANTES POR CONFEDERACIÓN":  
+                    equiposCof();
+                    break;
+                case "INFORME OFICIAL DEL PARTIDO":
+                    infoPartido();
+                    break;
+                case "GRUPOS Y CLASIFICACIONES":
+                    grupoClasificaciones();
+                    break;                        
+                case "TABLA GENERAL DE POSICIONES":
+                    posicionesGenerales();
+                    break;
+                case "TABLA DE GOLEADORES":
+                    goleadores();
+                    break;
+                default:
+            }
         }
+        catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, "ERROR AL REALIZAR LA OPERACION");
+                Logger.getLogger(ControladorPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+            }
         
         //Fin del menu controlador principal
     }
