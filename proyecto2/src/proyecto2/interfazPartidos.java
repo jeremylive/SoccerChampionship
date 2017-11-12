@@ -628,14 +628,14 @@ public class interfazPartidos extends javax.swing.JFrame
     }// </editor-fold>//GEN-END:initComponents
     private void sigEquipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sigEquipoActionPerformed
         try {      
-            control.sigEquipo(equipo1y2.getSelectedItem().toString(), nombreEstadio.getSelectedItem().toString(), fecha.getText(), hora.getText(), cantAficionados.getText(), jugadoresSuplentes.getText(), jugadoresTitulares.getText(), grupo_clasificatoria.getSelectedItem().toString(), primerTiempoR.getSelectedItem().toString(), segundoTiempoR.getSelectedItem().toString());
+            control.sigEquipo(equipo1y2.getSelectedItem().toString(), nombreEstadio.getSelectedItem().toString(), fecha.getText(), hora.getText(), cantAficionados.getText(), jugadoresSuplentes.getText(), jugadoresTitulares.getText(), grupo_clasificatoria.getSelectedItem().toString(), primerTiempoR.getSelectedItem().toString(), segundoTiempoR.getSelectedItem().toString(), contadorEquipo1o2.toString());
         } catch (SQLException ex) {
             Logger.getLogger(interfazPartidos.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_sigEquipoActionPerformed
     private void cargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cargarActionPerformed
         try {      
-            control.cargarEquipos(equipo1y2.getSelectedItem().toString(), nombreEstadio.getSelectedItem().toString(), fecha.getText(), hora.getText(), cantAficionados.getText(), jugadoresSuplentes.getText(), jugadoresTitulares.getText(),jugaronTiemposExtras.getSelectedItem().toString(), tiraronPenales.getSelectedItem().toString(), grupo_clasificatoria.getSelectedItem().toString(), primerTiempoR.getSelectedItem().toString(), segundoTiempoR.getSelectedItem().toString());
+            control.cargarEquipos(equipo1y2.getSelectedItem().toString(), nombreEstadio.getSelectedItem().toString(), fecha.getText(), hora.getText(), cantAficionados.getText(), jugadoresSuplentes.getText(), jugadoresTitulares.getText(),jugaronTiemposExtras.getSelectedItem().toString(), tiraronPenales.getSelectedItem().toString(), grupo_clasificatoria.getSelectedItem().toString(), primerTiempoR.getSelectedItem().toString(), segundoTiempoR.getSelectedItem().toString(), contadorEquipo1o2.toString());
         } catch (SQLException ex) {
             Logger.getLogger(interfazPartidos.class.getName()).log(Level.SEVERE, null, ex);
         }

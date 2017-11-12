@@ -467,7 +467,7 @@ public class ControladorPrincipal
         metaDatos = output.getMetaData();
         int index = metaDatos.getColumnCount();
         
-        DefaultTableModel modelo = getRegister().getTablaModel();   //Obtengo la tabla de la Base de datos para poder agregarla
+        DefaultTableModel modelo = ventanaPrincipal().getTablaQuerysPrincipal();   //Obtengo la tabla de la Base de datos para poder agregarla
         modelo.setRowCount(0);
         
         while(output.next())
