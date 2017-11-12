@@ -163,7 +163,7 @@ public class ventanaPrincipal extends javax.swing.JFrame
         pack();
     }// </editor-fold>//GEN-END:initComponents
     private void ejecutarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ejecutarActionPerformed
-        controlador.logicaVentanaPrincipal(getOpciones());      
+        controlador.logicaVentanaPrincipal(getOpciones(), getTablaQuerysPrincipal());      
     }//GEN-LAST:event_ejecutarActionPerformed
     private void opcionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcionesActionPerformed
     }//GEN-LAST:event_opcionesActionPerformed

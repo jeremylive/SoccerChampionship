@@ -24,6 +24,8 @@ public class ControladorPrincipal
     private Statement statement;
     private Connection connection;
     private int numero_partido=0;
+    private DefaultTableModel tabla;
+    private int quienGanoPartido;
     
     //Variables de PartidoCRUD
     private String equipo_1;
@@ -360,8 +362,31 @@ public class ControladorPrincipal
     public void setArbitro_5to(String arbitro_5to) {
         this.arbitro_5to = arbitro_5to;
     }
+
+    public int getNumero_partido() {
+        return numero_partido;
+    }
+
+    public void setNumero_partido(int numero_partido) {
+        this.numero_partido = numero_partido;
+    }
+
+    public DefaultTableModel getTabla() {
+        return tabla;
+    }
+
+    public void setTabla(DefaultTableModel tabla) {
+        this.tabla = tabla;
+    }
+    
+    
     
     //Funciones
+    public void ejecutarPenaless()
+    {
+        
+    }
+    
     public boolean isInteger(String cadena)
     {
         try{
@@ -449,14 +474,11 @@ public class ControladorPrincipal
         
         */
         
-        String insertPartido = "INSERT INTO PARTIDO (NUMERO_PARTIDO, ETAPA_CLASIFICATORIA, FECHA, HORA, CANTIDAD_AFICIONADOS, MIN_REPO_PRIMER_TIEMPO, MIN_REPO_SEGUNDO_TIEMPO, SEJUGOTIEMPOEXTRA, NOMBRE_ESTADIO, HUBOPENALES)\n"
+        String insertPartido = "INSERT INTO PARTIDO (NUMERO_PARTIDO, ETAPA_CLASIFICATORIA, FECHA, HORA, "
+                + "CANTIDAD_AFICIONADOS, MIN_REPO_PRIMER_TIEMPO, MIN_REPO_SEGUNDO_TIEMPO, SEJUGOTIEMPOEXTRA, NOMBRE_ESTADIO, HUBOPENALES)\n"
                     + "VALUES ("+insercionHacer+")";
         System.out.println(insertPartido);
-        
-        //Empiezo las inserciones de partidos
-        insercionHacer += numero_partido+", "+getGrupo_clasificatoria()+", "+getFecha_partido()+", "+getHora_partido()+", "+
-                getCantidad_aficionados()+", "+primerTiempoRepMin+", "+segundoTiempoRepMin+", "+tiempo_extra+", "+getTieraron_penales();
-        
+      
         //Inserto partidos
         statement.executeUpdate(insertPartido);
         getConnection().commit();
@@ -467,7 +489,7 @@ public class ControladorPrincipal
         metaDatos = output.getMetaData();
         int index = metaDatos.getColumnCount();
         
-        DefaultTableModel modelo = ventanaPrincipal().getTablaQuerysPrincipal();   //Obtengo la tabla de la Base de datos para poder agregarla
+        DefaultTableModel modelo = getTabla();   //Obtengo la tabla de la Base de datos para poder agregarla
         modelo.setRowCount(0);
         
         while(output.next())
@@ -481,12 +503,25 @@ public class ControladorPrincipal
             for (int i = 1; i < index; i++) {
                 vector.add(output.getString(i));
             }
-            
+            modelo.addRow(vector);
             
         }
         System.out.println("no entro...");
     }
    
+    public void queryPenales()
+    {
+        if(getTieraron_penales().equals("YES")){
+            crudPartidosPenales crudPenales = new crudPartidosPenales(this);
+            crudPenales.setLocationRelativeTo(null);
+            crudPenales.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(null, "Este partido no tuvo penales.. ");
+        }
+    }
+    
+    
+    
     /**
      * Funcion Inserto partido
      * @return 1 si algo sale mal o 0 si todo bien
@@ -494,7 +529,10 @@ public class ControladorPrincipal
      */
     
     //public int cargarEquipos(String equipo2, String nombreEstadio, String fecha, String hora, String cantAficionados, String jugadoresSuplentes, String jugadoresTitulares, String minPrimerTR, String minSegundoTR, String grupoC) throws SQLException    
-    public int cargarEquipos(String equipo2, String nombreEstadio, String fecha, String hora, String cantAficionados, String jugadoresSuplentes, String jugadoresTitulares, String tiempoExtra, String tiraronPenales, String grupoC, String minPrimerTR, String minSegundoTR) throws SQLException
+    public int cargarEquipos(String equipo2, String nombreEstadio, String fecha, String hora, String 
+            cantAficionados, String jugadoresSuplentes, String jugadoresTitulares, String tiempoExtra, 
+            String tiraronPenales, String grupoC, String minPrimerTR, String minSegundoTR, String contadorEquipo1y2) 
+            throws SQLException
     {
         //
         if(getContadorP() == 1)
@@ -569,7 +607,11 @@ public class ControladorPrincipal
                 setTieraron_penales(tiraronPenales);
                 
                 JOptionPane.showMessageDialog(null, "Felicidades toda su información a insertar esta correcta.");
-
+                
+                //Inserto penales
+                queryPenales();
+                
+                
                 //Hago QUERYS........... SQL
                 //-->inserto informacion a la tablas 
                 queryPartido();
@@ -599,7 +641,7 @@ public class ControladorPrincipal
      * @throws SQLException 
      */
     public int sigEquipo(String equipo1, String nombreEstadio, String fecha, String hora, String cantAficionados, 
-            String jugadoresSuplentes, String jugadoresTitulares, String grupoC, String minPrimerTR1, String minSegundoTR1) 
+            String jugadoresSuplentes, String jugadoresTitulares, String grupoC, String minPrimerTR1, String minSegundoTR1, String contadorEquipo1y2) 
             throws SQLException
      {
         if(getContadorP() == 0)
@@ -737,8 +779,10 @@ public class ControladorPrincipal
     }
     
     
-    public void logicaVentanaPrincipal(String operacion)
+    public void logicaVentanaPrincipal(String operacion, DefaultTableModel tabla1)
     {
+        //Seteo tabla
+        setTabla(tabla1);
         //Seteo la option a la variable global
         setOption(operacion);
         //Menu de control para las opciones deisponibles
