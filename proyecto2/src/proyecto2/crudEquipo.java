@@ -6,10 +6,13 @@ package proyecto2;
  */
 public class crudEquipo extends javax.swing.JFrame 
 {
-
-    public crudEquipo() 
+    //Variables globales
+    ControladorPrincipal control;
+    
+    public crudEquipo(ControladorPrincipal control) 
     {
         initComponents();
+        this.control = control;
     }
 
     @SuppressWarnings("unchecked")
@@ -102,7 +105,9 @@ public class crudEquipo extends javax.swing.JFrame
     }// </editor-fold>//GEN-END:initComponents
 
     private void crearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crearActionPerformed
-        
+        interfazEquipo interfaz = new interfazEquipo(control);
+        interfaz.setLocationRelativeTo(null);
+        interfaz.setVisible(true);  
     }//GEN-LAST:event_crearActionPerformed
 
     private void salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirActionPerformed

@@ -1,6 +1,7 @@
 package proyecto2;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -382,6 +383,76 @@ public class ControladorPrincipal
     
     
     //Funciones
+    
+    //Crea un nuevo equipo en la tabla Equipo
+    public void crearEquipo(String codEquipo, String nombrePais,String grupoInicial, String codigoConfederacion) throws SQLException
+    {
+        //Da formato a los strings
+        String SQLcodEquipo = "'" + codEquipo + "'";
+        String SQLnombrePais = "'" + nombrePais + "'";
+        String SQLgrupoInicial = "'" + grupoInicial + "'";
+        String SQLcodConfed = "'" + codigoConfederacion + "'";
+        
+        //Hago conexion
+        connection = Conexion.getConexion();
+        statement = connection.createStatement();
+        
+        //Realiza el query
+        String queryInsert = "INSERT INTO EQUIPO(CODIGO_EQUIPO,NOMBRE,GRUPO_INICIO,CODIGO_CONF) VALUES "
+                + "("+SQLcodEquipo+","+SQLnombrePais+","+SQLgrupoInicial+","+SQLcodConfed+")";
+        statement.executeUpdate(queryInsert);
+        getConnection().commit();
+    }
+    
+    //Crea una copia del entrenador con el pasaporteReal y  le asigna el nuevo codEquipo
+    public void crearEntrenadorEquipo(int pasaporteNuevo,String paisNac,String fechaIni,String codEquipo,int pasaporteReal) throws SQLException
+    {
+        //Hago conexion
+        connection = Conexion.getConexion();
+        statement = connection.createStatement();
+        
+        //Obtengo los datos de Persona con el numPasaporte real
+        String queryPersona = "SELECT NOMBRE,APELLIDO1,APELLIDO2,FECHA_NACIMIENTO FROM PERSONA "
+                + "WHERE NUM_PASAPORTE = " + pasaporteReal;
+   
+        output = statement.executeQuery(queryPersona);
+        metaDatos = output.getMetaData();
+        int index = metaDatos.getColumnCount();
+        
+        ArrayList<String> datosPersona = new ArrayList();
+        while(output.next())
+        {
+            for(int i = 1;i<=index;i++)
+                datosPersona.add(output.getString(i));
+        }
+        
+        //Hago conexion
+        connection = Conexion.getConexion();
+        statement = connection.createStatement();
+        
+        //Inserto una nueva tupla en Persona
+        String insertar = "INSERT INTO PERSONA(NUM_PASAPORTE,NOMBRE,APELLIDO1,APELLIDO2,FECHA_NACIMIENTO) VALUES "
+                + "("+pasaporteNuevo+",'"+datosPersona.get(0)+"','"+datosPersona.get(1)+"','"
+                + datosPersona.get(2)+"','"+datosPersona.get(3)+"')";
+        statement.executeUpdate(insertar);
+        getConnection().commit();
+        
+        System.out.println("Persona creada");
+        
+        //Hago conexion
+        connection = Conexion.getConexion();
+        statement = connection.createStatement();
+        
+        //Inserto una nueva tupla en Entrenador
+        insertar = "INSERT INTO ENTRENADOR(NUMERO_PASAPORTE,PAIS_NACIONALIDAD,FECHA_INICIO,CODIGO_EQUIPO) VALUES "
+                + "("+pasaporteNuevo+","+paisNac+","+fechaIni+","
+                + codEquipo+")";
+        statement.executeUpdate(insertar);
+        getConnection().commit();
+        
+        System.out.println("Entrenador creado");
+    }
+    
     public void ejecutarPenaless()
     {
         
@@ -403,46 +474,108 @@ public class ControladorPrincipal
 
     }
     
-    public void queryEquiposPorConfed(String codConfed) throws SQLException
+    public void queryEquiposPorConfed(String codConfed)
     {
-        String query = "SELECT CONFEDERACIONESFUTBOL.CODIGO,EQUIPO.NOMBRE FROM EQUIPO JOIN CONFEDERACIONESFUTBOL ON CONFEDERACIONESFUTBOL.CODIGO = EQUIPO.CODIGO_CONF ";
-        if(!codConfed.equals("*"))
-            query += "WHERE CONFEDERACIONESFUTBOL.CODIGO = "+codConfed;
-        query+=" ORDER BY CONFEDERACIONESFUTBOL.CODIGO,EQUIPO.NOMBRE";
-        
-        String confederacionActual = "";
-        //Ejecuto el query
-        output = statement.executeQuery(query);
-        while(output.next())
-        {
-            if(confederacionActual.equals("")||!confederacionActual.equals(output.getString(1))) {
-                System.out.println(output.getString(1));
+        try {
+            //Hago conexion
+            connection = Conexion.getConexion();
+            statement = connection.createStatement();
+            
+            //Crea el query
+            String query = "SELECT CONFEDERACIONESFUTBOL.CODIGO,EQUIPO.NOMBRE FROM EQUIPO JOIN CONFEDERACIONESFUTBOL ON CONFEDERACIONESFUTBOL.CODIGO = EQUIPO.CODIGO_CONF ";
+                //Si se especifica un equipo
+            if(!codConfed.equals(""))
+                query += "WHERE CONFEDERACIONESFUTBOL.CODIGO = '"+codConfed+"' ";
+            query+="ORDER BY CONFEDERACIONESFUTBOL.CODIGO,EQUIPO.NOMBRE";
+            
+            //Ejecuto el query
+            output = statement.executeQuery(query);
+            
+            //Obtengo los metadatos y nombres de columnas
+            metaDatos = output.getMetaData();
+            int index = metaDatos.getColumnCount();
+            Vector nombreColumnas = new Vector();
+            for (int i = 1; i <= index; i++) {
+                nombreColumnas.add(metaDatos.getColumnLabel(i));
             }
-            System.out.println(output.getString(2));
+
+            String confederacionActual = ""; //Usado para imprimir en pantalla
+            
+            //Obtengo las tuplas en un vector que contiene vectores
+            Vector filas = new Vector();
+            while(output.next())
+            {
+                //Imprime en pantalla
+                if(confederacionActual.equals("")||!confederacionActual.equals(output.getString(1))) {
+                    System.out.println(output.getString(1));
+                    confederacionActual = output.getString(1);
+                }
+                System.out.println("    "+output.getString(2));
+                //Añado al vector de datos
+                Vector tupla = new Vector();
+                for (int i = 1; i <= index; i++) {
+                    tupla.add(output.getString(i));
+                }
+                filas.add(tupla);
+            }
+            
+            //Muestro los resultados
+            DefaultTableModel modelo = this.getTabla();
+            modelo.setDataVector(filas,nombreColumnas);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al realizar la consulta");
         }
-        System.out.println("no entro...");
     }
     
-    public void queryGoleadores() throws SQLException
+    public void queryGoleadores()
     {
-        //Hago conexion
-        connection = Conexion.getConexion();
-        statement = connection.createStatement(); 
-        
-        String query = "SELECT NOMBRE,APELLIDO1,APELLIDO2,JUGADOR.CODIGO_EQUIPO,count(NUMERO_PARTIDO) FROM PARTIDO_GOLES "
-                + "JOIN JUGADOR ON PARTIDO_GOLES.NUMERO_PASAPORTE = JUGADOR.NUMERO_PASAPORTE "
-                + "JOIN PERSONA ON JUGADOR.NUMERO_PASAPORTE = PERSONA.NUM_PASAPORTE "
-                + "GROUP BY NOMBRE,APELLIDO1,APELLIDO2,JUGADOR.CODIGO_EQUIPO "
-                + "ORDER BY count(NUMERO_PARTIDO) DESC,NOMBRE,APELLIDO1,APELLIDO2";
-        //Ejecuto el query
-        int posicion = 1;
-        output = statement.executeQuery(query);
-        while(output.next())
-        {
-            System.out.println("Posicion:"+posicion+"   Nombre:"+output.getString(1)+"   Apellido1:"+output.getString(2)+"   Apellido2:"+output.getString(3)+"   Equipo:"+output.getString(4)+"   Goles:"+output.getString(5));
-            posicion++;
+        try {
+            //Hago conexion
+            connection = Conexion.getConexion();
+            statement = connection.createStatement();
+            
+            //Ejecuto el query
+            String query = "SELECT NOMBRE,APELLIDO1,APELLIDO2,JUGADOR.CODIGO_EQUIPO,count(NUMERO_PARTIDO) GOLES FROM PARTIDO_GOLES "
+                    + "JOIN JUGADOR ON PARTIDO_GOLES.NUMERO_PASAPORTE = JUGADOR.NUMERO_PASAPORTE "
+                    + "JOIN PERSONA ON JUGADOR.NUMERO_PASAPORTE = PERSONA.NUM_PASAPORTE "
+                    + "GROUP BY NOMBRE,APELLIDO1,APELLIDO2,JUGADOR.CODIGO_EQUIPO "
+                    + "ORDER BY count(NUMERO_PARTIDO) DESC,NOMBRE,APELLIDO1,APELLIDO2";
+            output = statement.executeQuery(query);
+            
+            //Obtengo los metadatos y nombres de columnas
+            metaDatos = output.getMetaData();
+            int index = metaDatos.getColumnCount();
+            
+            Vector nombreColumnas = new Vector();
+            nombreColumnas.add("POSICION");
+            for (int i = 1; i <= index; i++) {
+                nombreColumnas.add(metaDatos.getColumnLabel(i));
+            }
+            
+            //Obtengo las tuplas en un vector que contiene vectores
+            int posicion = 1;
+            Vector filas = new Vector();
+            while(output.next())
+            {
+                //Imprime en pantalla
+                System.out.println("Posicion:"+posicion+"   Nombre:"+output.getString(1)+"   Apellido1:"+output.getString(2)+"   Apellido2:"+output.getString(3)+"   Equipo:"+output.getString(4)+"   Goles:"+output.getString(5));
+                //Añado al vector de datos
+                Vector tupla = new Vector();
+                tupla.add(posicion);
+                for (int i = 1; i <= index; i++) {
+                    tupla.add(output.getString(i));
+                }
+                filas.add(tupla);
+                posicion++;
+            }
+            
+            //Muestro los resultados
+            DefaultTableModel modelo = this.getTabla();
+            modelo.setDataVector(filas,nombreColumnas);
+            
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al realizar la consulta");
         }
-        System.out.println("no entro...");
     }
     
     public void queryPartido() throws SQLException 
@@ -737,12 +870,12 @@ public class ControladorPrincipal
     } 
     
     //--------------Equipos por Confederacion------------------------
-    public void equiposCof() throws SQLException
+    public void equiposCof(String parametro) throws SQLException
     {
         JOptionPane.showMessageDialog(null, "ACABAS DE HACER LA CONSULTA: EQUIPOS PARTICIPANTES POR CONFEDERACIÓN");
         //LOGIC
         //##--
-        queryEquiposPorConfed("*");
+        
         //Total de confederaciones
         
         //Dividir en grupos por confederaciones
@@ -750,6 +883,7 @@ public class ControladorPrincipal
         //Recorrer los grupos eh imprimir sus equipos
         
         //Fin de la operación...    
+        queryEquiposPorConfed(parametro);
     }
     
     //----------------------Informacion del partido---------------------------
@@ -779,7 +913,7 @@ public class ControladorPrincipal
     }
     
     
-    public void logicaVentanaPrincipal(String operacion, DefaultTableModel tabla1)
+    public void logicaVentanaPrincipal(String operacion, DefaultTableModel tabla1, String parametro)
     {
         //Seteo tabla
         setTabla(tabla1);
@@ -789,7 +923,7 @@ public class ControladorPrincipal
         try {
             switch(getOption()){
                 case "EQUIPOS PARTICIPANTES POR CONFEDERACIÓN":  
-                    equiposCof();
+                    equiposCof(parametro);
                     break;
                 case "INFORME OFICIAL DEL PARTIDO":
                     infoPartido();
