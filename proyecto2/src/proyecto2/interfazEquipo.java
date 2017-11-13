@@ -35,7 +35,7 @@ public class interfazEquipo extends javax.swing.JFrame {
         cargarJugadores();
         cargarFederativos();
         cargarAsistentes();
-        
+
         this.control = control;
 
         crudEquipo_cantJugador.setText("" + cantJugadores);
@@ -138,6 +138,11 @@ public class interfazEquipo extends javax.swing.JFrame {
         crudEquipo_scrollJugador.setViewportView(crudEquipo_tablaJugador);
 
         crudEquipo_selectJugador.setText("Seleccionar Jugador");
+        crudEquipo_selectJugador.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                crudEquipo_selectJugadorActionPerformed(evt);
+            }
+        });
 
         jLabel9.setText("Cantidad:");
 
@@ -159,6 +164,11 @@ public class interfazEquipo extends javax.swing.JFrame {
         crudEquipo_scrollAsistente.setViewportView(crudEquipo_tablaAsistente);
 
         crudEquipo_selectAsistente.setText("Seleccionar Asistente");
+        crudEquipo_selectAsistente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                crudEquipo_selectAsistenteActionPerformed(evt);
+            }
+        });
 
         jLabel10.setText("Cantidad:");
 
@@ -180,6 +190,11 @@ public class interfazEquipo extends javax.swing.JFrame {
         crudEquipo_scrollFederativo.setViewportView(crudEquipo_tablaFederativo);
 
         crudEquipo_selectFederativo.setText("Seleccionar Federativo");
+        crudEquipo_selectFederativo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                crudEquipo_selectFederativoActionPerformed(evt);
+            }
+        });
 
         crudEquipo_cantFederativo.setEditable(false);
 
@@ -360,178 +375,168 @@ public class interfazEquipo extends javax.swing.JFrame {
             //Hago conexion
             Connection connection = Conexion.getConexion();
             Statement statement = connection.createStatement();
-            
+
             //Realiza el query
             String query = "SELECT * FROM ENTRENADOR";
             ResultSet output = statement.executeQuery(query);
-            
+
             //Obtengo los metadatos y nombres de columnas
             ResultSetMetaData metaDatos = output.getMetaData();
             int index = metaDatos.getColumnCount();
-            
+
             Vector nombreColumnas = new Vector();
             for (int i = 1; i <= index; i++) {
                 nombreColumnas.add(metaDatos.getColumnLabel(i));
             }
-            
+
             //Obtengo las tuplas en un vector que contiene vectores
             Vector filas = new Vector();
-            while(output.next())
-            {
+            while (output.next()) {
                 Vector tupla = new Vector();
                 for (int i = 1; i <= index; i++) {
                     tupla.add(output.getString(i));
                 }
                 filas.add(tupla);
             }
-            
+
             //Muestro los resultados
             DefaultTableModel modelo = (DefaultTableModel) this.crudEquipo_tablaEntrenador.getModel();
-            modelo.setDataVector(filas,nombreColumnas);
-        }
-        catch (SQLException ex) {
+            modelo.setDataVector(filas, nombreColumnas);
+        } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al cargar la tabla de Entrenadores");
         }
     }
-    
+
     private void cargarJugadores() {
         try {
             //Hago conexion
             Connection connection = Conexion.getConexion();
             Statement statement = connection.createStatement();
-            
+
             //Realiza el query
             String query = "SELECT * FROM JUGADOR";
             ResultSet output = statement.executeQuery(query);
-            
+
             //Obtengo los metadatos y nombres de columnas
             ResultSetMetaData metaDatos = output.getMetaData();
             int index = metaDatos.getColumnCount();
-            
+
             Vector nombreColumnas = new Vector();
             for (int i = 1; i <= index; i++) {
                 nombreColumnas.add(metaDatos.getColumnLabel(i));
             }
-            
+
             //Obtengo las tuplas en un vector que contiene vectores
             Vector filas = new Vector();
-            while(output.next())
-            {
+            while (output.next()) {
                 Vector tupla = new Vector();
                 for (int i = 1; i <= index; i++) {
                     tupla.add(output.getString(i));
                 }
                 filas.add(tupla);
             }
-            
+
             //Muestro los resultados
             DefaultTableModel modelo = (DefaultTableModel) this.crudEquipo_tablaJugador.getModel();
-            modelo.setDataVector(filas,nombreColumnas);
-        }
-        catch (SQLException ex) {
+            modelo.setDataVector(filas, nombreColumnas);
+        } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al cargar la tabla de Jugadores");
         }
     }
-    
+
     private void cargarFederativos() {
         try {
             //Hago conexion
             Connection connection = Conexion.getConexion();
             Statement statement = connection.createStatement();
-            
+
             //Realiza el query
             String query = "SELECT * FROM FEDERATIVO";
             ResultSet output = statement.executeQuery(query);
-            
+
             //Obtengo los metadatos y nombres de columnas
             ResultSetMetaData metaDatos = output.getMetaData();
             int index = metaDatos.getColumnCount();
-            
+
             Vector nombreColumnas = new Vector();
             for (int i = 1; i <= index; i++) {
                 nombreColumnas.add(metaDatos.getColumnLabel(i));
             }
-            
+
             //Obtengo las tuplas en un vector que contiene vectores
             Vector filas = new Vector();
-            while(output.next())
-            {
+            while (output.next()) {
                 Vector tupla = new Vector();
                 for (int i = 1; i <= index; i++) {
                     tupla.add(output.getString(i));
                 }
                 filas.add(tupla);
             }
-            
+
             //Muestro los resultados
             DefaultTableModel modelo = (DefaultTableModel) this.crudEquipo_tablaFederativo.getModel();
-            modelo.setDataVector(filas,nombreColumnas);
-        }
-        catch (SQLException ex) {
+            modelo.setDataVector(filas, nombreColumnas);
+        } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al cargar la tabla de Federativo");
         }
     }
-    
+
     private void cargarAsistentes() {
         try {
             //Hago conexion
             Connection connection = Conexion.getConexion();
             Statement statement = connection.createStatement();
-            
+
             //Realiza el query
             String query = "SELECT * FROM ASISTENTE";
             ResultSet output = statement.executeQuery(query);
-            
+
             //Obtengo los metadatos y nombres de columnas
             ResultSetMetaData metaDatos = output.getMetaData();
             int index = metaDatos.getColumnCount();
-            
+
             Vector nombreColumnas = new Vector();
             for (int i = 1; i <= index; i++) {
                 nombreColumnas.add(metaDatos.getColumnLabel(i));
             }
-            
+
             //Obtengo las tuplas en un vector que contiene vectores
             Vector filas = new Vector();
-            while(output.next())
-            {
+            while (output.next()) {
                 Vector tupla = new Vector();
                 for (int i = 1; i <= index; i++) {
                     tupla.add(output.getString(i));
                 }
                 filas.add(tupla);
             }
-            
+
             //Muestro los resultados
             DefaultTableModel modelo = (DefaultTableModel) this.crudEquipo_tablaAsistente.getModel();
-            modelo.setDataVector(filas,nombreColumnas);
-        }
-        catch (SQLException ex) {
+            modelo.setDataVector(filas, nombreColumnas);
+        } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al cargar la tabla de Asistente");
         }
     }
-    
+
     private void crudEquipo_crearEquipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crudEquipo_crearEquipoActionPerformed
         try {
             control.crearEquipo(crudEquipo_codigoEquipo.getText(), crudEquipo_nombrePais.getText(), crudEquipo_grupoInicial.getText(), crudEquipo_codigoConfederacion.getText());
             JOptionPane.showMessageDialog(null, "Equipo creado correctamente");
             equipoCreado = true;
         } catch (SQLException ex) {
-            ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error al crear el equipo");
         }
     }//GEN-LAST:event_crudEquipo_crearEquipoActionPerformed
 
     private void crudEquipo_selectEntrenadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crudEquipo_selectEntrenadorActionPerformed
         if (equipoCreado) {
-            int pasaporteReal = new Integer((String) crudEquipo_tablaEntrenador.getModel().getValueAt(crudEquipo_tablaEntrenador.getSelectedRow(), 0)).intValue();
-            int pasaporteNuevo = new Integer((String) crudEquipo_tablaEntrenador.getModel().getValueAt(crudEquipo_tablaEntrenador.getModel().getRowCount()-1,0)).intValue() + 1;
+            int pasaporteReal = Integer.parseInt((String) crudEquipo_tablaEntrenador.getModel().getValueAt(crudEquipo_tablaEntrenador.getSelectedRow(), 0));
             String paisNac = "'" + (String) crudEquipo_tablaEntrenador.getModel().getValueAt(crudEquipo_tablaEntrenador.getSelectedRow(), 1) + "'";
             String fechaIni = "'" + (String) crudEquipo_tablaEntrenador.getModel().getValueAt(crudEquipo_tablaEntrenador.getSelectedRow(), 2) + "'";
             String codEquipo = "'" + crudEquipo_codigoEquipo.getText() + "'";
 
             try {
-                control.crearEntrenadorEquipo(pasaporteNuevo, paisNac, fechaIni, codEquipo, pasaporteReal);
+                control.crearEntrenadorEquipo(paisNac, fechaIni, codEquipo, pasaporteReal);
                 JOptionPane.showMessageDialog(null, "Entrenador seleccionado correctamente");
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, "Error al seleccionar el entrenador");
@@ -544,6 +549,72 @@ public class interfazEquipo extends javax.swing.JFrame {
     private void crudEquipo_botonSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crudEquipo_botonSalirActionPerformed
         this.dispose();
     }//GEN-LAST:event_crudEquipo_botonSalirActionPerformed
+
+    private void crudEquipo_selectJugadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crudEquipo_selectJugadorActionPerformed
+        if (equipoCreado) {
+            if (cantJugadores < 23) {
+                int pasaporteReal = Integer.parseInt((String) crudEquipo_tablaJugador.getModel().getValueAt(crudEquipo_tablaJugador.getSelectedRow(), 0));
+                String puesto = "'" + (String) crudEquipo_tablaJugador.getModel().getValueAt(crudEquipo_tablaJugador.getSelectedRow(), 1) + "'";
+                int numCamiseta = Integer.parseInt((String) crudEquipo_tablaJugador.getModel().getValueAt(crudEquipo_tablaJugador.getSelectedRow(), 2));
+                String codEquipo = "'" + crudEquipo_codigoEquipo.getText() + "'";
+                String esCapt = "'" + (String) crudEquipo_tablaJugador.getModel().getValueAt(crudEquipo_tablaJugador.getSelectedRow(), 4) + "'";
+                try {
+                    control.crearJugadorEquipo(pasaporteReal, puesto, numCamiseta, codEquipo, esCapt);
+                    JOptionPane.showMessageDialog(null, "Jugador seleccionado correctamente");
+                    cantJugadores++;
+                    crudEquipo_cantJugador.setText(""+cantJugadores);
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(null, "Error al seleccionar el jugador");
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "El equipo ya tiene 23 jugadores");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Primero debe crear el equipo");
+        }
+    }//GEN-LAST:event_crudEquipo_selectJugadorActionPerformed
+
+    private void crudEquipo_selectAsistenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crudEquipo_selectAsistenteActionPerformed
+        if (equipoCreado) {
+            int pasaporteReal = Integer.parseInt((String) crudEquipo_tablaAsistente.getModel().getValueAt(crudEquipo_tablaAsistente.getSelectedRow(), 0));
+            String paisNac = "'" + (String) crudEquipo_tablaAsistente.getModel().getValueAt(crudEquipo_tablaAsistente.getSelectedRow(), 1) + "'";
+            String fechaIni = "'" + (String) crudEquipo_tablaAsistente.getModel().getValueAt(crudEquipo_tablaAsistente.getSelectedRow(), 2) + "'";
+            String tipoAsist = "'" + (String) crudEquipo_tablaAsistente.getModel().getValueAt(crudEquipo_tablaAsistente.getSelectedRow(), 3) + "'";            
+            String codEquipo = "'" + crudEquipo_codigoEquipo.getText() + "'";
+
+            try {
+                control.crearAsistenteEquipo(pasaporteReal, paisNac, fechaIni, tipoAsist,codEquipo);
+                JOptionPane.showMessageDialog(null, "Asistente seleccionado correctamente");
+                cantAsistentes++;
+                crudEquipo_cantAsistente.setText(""+cantAsistentes);
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, "Error al seleccionar el asistente");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Primero debe crear el equipo");
+        }
+    }//GEN-LAST:event_crudEquipo_selectAsistenteActionPerformed
+
+    private void crudEquipo_selectFederativoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crudEquipo_selectFederativoActionPerformed
+        if (equipoCreado) {
+            int pasaporteReal = Integer.parseInt((String) crudEquipo_tablaFederativo.getModel().getValueAt(crudEquipo_tablaFederativo.getSelectedRow(), 0));
+            String paisNac = "'" + (String) crudEquipo_tablaFederativo.getModel().getValueAt(crudEquipo_tablaFederativo.getSelectedRow(), 1) + "'";
+            String fechaIni = "'" + (String) crudEquipo_tablaFederativo.getModel().getValueAt(crudEquipo_tablaFederativo.getSelectedRow(), 2) + "'";
+            String puesto = "'" + (String) crudEquipo_tablaFederativo.getModel().getValueAt(crudEquipo_tablaFederativo.getSelectedRow(), 3) + "'";            
+            String codEquipo = "'" + crudEquipo_codigoEquipo.getText() + "'";
+
+            try {
+                control.crearFederativoEquipo(pasaporteReal, paisNac, fechaIni, puesto,codEquipo);
+                JOptionPane.showMessageDialog(null, "Federativo seleccionado correctamente");
+                cantFederativos++;
+                crudEquipo_cantFederativo.setText(""+cantFederativos);
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, "Error al seleccionar el federativo");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Primero debe crear el equipo");
+        }
+    }//GEN-LAST:event_crudEquipo_selectFederativoActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

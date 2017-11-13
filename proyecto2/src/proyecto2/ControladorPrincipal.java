@@ -405,16 +405,14 @@ public class ControladorPrincipal
     }
     
     //Crea una copia del entrenador con el pasaporteReal y  le asigna el nuevo codEquipo
-    public void crearEntrenadorEquipo(int pasaporteNuevo,String paisNac,String fechaIni,String codEquipo,int pasaporteReal) throws SQLException
-    {
+    public void crearEntrenadorEquipo(String paisNac,String fechaIni,String codEquipo,int pasaporteReal) throws SQLException
+    {   
         //Hago conexion
         connection = Conexion.getConexion();
         statement = connection.createStatement();
         
-        //Obtengo los datos de Persona con el numPasaporte real
-        String queryPersona = "SELECT NOMBRE,APELLIDO1,APELLIDO2,FECHA_NACIMIENTO FROM PERSONA "
-                + "WHERE NUM_PASAPORTE = " + pasaporteReal;
-   
+        //Obtengo los datos de Persona con el num de pasaporte
+        String queryPersona = "SELECT NOMBRE,APELLIDO1,APELLIDO2,FECHA_NACIMIENTO FROM PERSONA WHERE NUM_PASAPORTE = "+pasaporteReal;
         output = statement.executeQuery(queryPersona);
         metaDatos = output.getMetaData();
         int index = metaDatos.getColumnCount();
@@ -423,34 +421,164 @@ public class ControladorPrincipal
         while(output.next())
         {
             for(int i = 1;i<=index;i++)
+            {
                 datosPersona.add(output.getString(i));
+            }
         }
         
-        //Hago conexion
-        connection = Conexion.getConexion();
-        statement = connection.createStatement();
+        //Obtengo el ultimo numero de pasaporte existente en la tabla
+        int pasaporteNuevo = 0;
+        String queryUltimoPas = "SELECT MAX(NUM_PASAPORTE) FROM PERSONA";
+        output = statement.executeQuery(queryUltimoPas);
+        while(output.next())
+        {
+            pasaporteNuevo = output.getInt(1) +1;
+        }
         
         //Inserto una nueva tupla en Persona
         String insertar = "INSERT INTO PERSONA(NUM_PASAPORTE,NOMBRE,APELLIDO1,APELLIDO2,FECHA_NACIMIENTO) VALUES "
                 + "("+pasaporteNuevo+",'"+datosPersona.get(0)+"','"+datosPersona.get(1)+"','"
-                + datosPersona.get(2)+"','"+datosPersona.get(3)+"')";
+                + datosPersona.get(2)+"',TO_TIMESTAMP('"+datosPersona.get(3)+"','YYYY-MM-DD HH24:MI:SS.FF9'))";
         statement.executeUpdate(insertar);
         getConnection().commit();
         
-        System.out.println("Persona creada");
-        
+        //Inserto una nueva tupla en Entrenador
+        insertar = "INSERT INTO ENTRENADOR(NUMERO_PASAPORTE,PAIS_NACIONALIDAD,FECHA_INICIO,CODIGO_EQUIPO) VALUES "
+                + "("+pasaporteNuevo+","+paisNac+",TO_TIMESTAMP("+fechaIni+",'YYYY-MM-DD HH24:MI:SS.FF9'),"
+                + codEquipo+")";
+        statement.executeUpdate(insertar);
+        getConnection().commit();
+    }
+    
+    public void crearJugadorEquipo(int pasaporteReal,String puesto,int numCamiseta,String codEquipo,String esCapt) throws SQLException{
         //Hago conexion
         connection = Conexion.getConexion();
         statement = connection.createStatement();
         
-        //Inserto una nueva tupla en Entrenador
-        insertar = "INSERT INTO ENTRENADOR(NUMERO_PASAPORTE,PAIS_NACIONALIDAD,FECHA_INICIO,CODIGO_EQUIPO) VALUES "
-                + "("+pasaporteNuevo+","+paisNac+","+fechaIni+","
-                + codEquipo+")";
+        //Obtengo los datos de Persona con el num de pasaporte
+        String queryPersona = "SELECT NOMBRE,APELLIDO1,APELLIDO2,FECHA_NACIMIENTO FROM PERSONA WHERE NUM_PASAPORTE = "+pasaporteReal;
+        output = statement.executeQuery(queryPersona);
+        metaDatos = output.getMetaData();
+        int index = metaDatos.getColumnCount();
+        
+        ArrayList<String> datosPersona = new ArrayList();
+        while(output.next())
+        {
+            for(int i = 1;i<=index;i++)
+            {
+                datosPersona.add(output.getString(i));
+            }
+        }
+        
+        //Obtengo el ultimo numero de pasaporte existente en la tabla
+        int pasaporteNuevo = 0;
+        String queryUltimoPas = "SELECT MAX(NUM_PASAPORTE) FROM PERSONA";
+        output = statement.executeQuery(queryUltimoPas);
+        while(output.next())
+        {
+            pasaporteNuevo = output.getInt(1) +1;
+        }
+        
+        //Inserto una nueva tupla en Persona
+        String insertar = "INSERT INTO PERSONA(NUM_PASAPORTE,NOMBRE,APELLIDO1,APELLIDO2,FECHA_NACIMIENTO) VALUES "
+                + "("+pasaporteNuevo+",'"+datosPersona.get(0)+"','"+datosPersona.get(1)+"','"
+                + datosPersona.get(2)+"',TO_TIMESTAMP('"+datosPersona.get(3)+"','YYYY-MM-DD HH24:MI:SS.FF9'))";
         statement.executeUpdate(insertar);
         getConnection().commit();
         
-        System.out.println("Entrenador creado");
+        //Inserto una nueva tupla en Jugador
+        insertar = "INSERT INTO JUGADOR(NUMERO_PASAPORTE,PUESTO,NUMERO_CAMISETA,CODIGO_EQUIPO,ES_CAPITAN) VALUES "
+                + "("+pasaporteNuevo+","+puesto+","+numCamiseta+","+codEquipo+","+esCapt+")";
+        statement.executeUpdate(insertar);
+        getConnection().commit();
+    }
+    
+    public void crearAsistenteEquipo(int pasaporteReal,String paisNac,String fechaIni,String tipoAsist,String codEquipo) throws SQLException{
+        //Hago conexion
+        connection = Conexion.getConexion();
+        statement = connection.createStatement();
+        
+        //Obtengo los datos de Persona con el num de pasaporte
+        String queryPersona = "SELECT NOMBRE,APELLIDO1,APELLIDO2,FECHA_NACIMIENTO FROM PERSONA WHERE NUM_PASAPORTE = "+pasaporteReal;
+        output = statement.executeQuery(queryPersona);
+        metaDatos = output.getMetaData();
+        int index = metaDatos.getColumnCount();
+        
+        ArrayList<String> datosPersona = new ArrayList();
+        while(output.next())
+        {
+            for(int i = 1;i<=index;i++)
+            {
+                datosPersona.add(output.getString(i));
+            }
+        }
+        
+        //Obtengo el ultimo numero de pasaporte existente en la tabla
+        int pasaporteNuevo = 0;
+        String queryUltimoPas = "SELECT MAX(NUM_PASAPORTE) FROM PERSONA";
+        output = statement.executeQuery(queryUltimoPas);
+        while(output.next())
+        {
+            pasaporteNuevo = output.getInt(1) +1;
+        }
+        
+        //Inserto una nueva tupla en Persona
+        String insertar = "INSERT INTO PERSONA(NUM_PASAPORTE,NOMBRE,APELLIDO1,APELLIDO2,FECHA_NACIMIENTO) VALUES "
+                + "("+pasaporteNuevo+",'"+datosPersona.get(0)+"','"+datosPersona.get(1)+"','"
+                + datosPersona.get(2)+"',TO_TIMESTAMP('"+datosPersona.get(3)+"','YYYY-MM-DD HH24:MI:SS.FF9'))";
+        statement.executeUpdate(insertar);
+        getConnection().commit();
+        
+        //Inserto una nueva tupla en Asistente
+        insertar = "INSERT INTO ASISTENTE(NUMERO_PASAPORTE,PAIS_NACIONALIDAD,FECHA_INICIO,TIPO,CODIGO_EQUIPO) VALUES "
+                + "("+pasaporteNuevo+","+paisNac+",TO_TIMESTAMP("+fechaIni+",'YYYY-MM-DD HH24:MI:SS.FF9'),"
+                + tipoAsist + "," + codEquipo+")";
+        statement.executeUpdate(insertar);
+        getConnection().commit();
+    }
+    
+    public void crearFederativoEquipo(int pasaporteReal,String paisNac,String fechaIni,String puesto,String codEquipo) throws SQLException{
+        //Hago conexion
+        connection = Conexion.getConexion();
+        statement = connection.createStatement();
+        
+        //Obtengo los datos de Persona con el num de pasaporte
+        String queryPersona = "SELECT NOMBRE,APELLIDO1,APELLIDO2,FECHA_NACIMIENTO FROM PERSONA WHERE NUM_PASAPORTE = "+pasaporteReal;
+        output = statement.executeQuery(queryPersona);
+        metaDatos = output.getMetaData();
+        int index = metaDatos.getColumnCount();
+        
+        ArrayList<String> datosPersona = new ArrayList();
+        while(output.next())
+        {
+            for(int i = 1;i<=index;i++)
+            {
+                datosPersona.add(output.getString(i));
+            }
+        }
+        
+        //Obtengo el ultimo numero de pasaporte existente en la tabla
+        int pasaporteNuevo = 0;
+        String queryUltimoPas = "SELECT MAX(NUM_PASAPORTE) FROM PERSONA";
+        output = statement.executeQuery(queryUltimoPas);
+        while(output.next())
+        {
+            pasaporteNuevo = output.getInt(1) +1;
+        }
+        
+        //Inserto una nueva tupla en Persona
+        String insertar = "INSERT INTO PERSONA(NUM_PASAPORTE,NOMBRE,APELLIDO1,APELLIDO2,FECHA_NACIMIENTO) VALUES "
+                + "("+pasaporteNuevo+",'"+datosPersona.get(0)+"','"+datosPersona.get(1)+"','"
+                + datosPersona.get(2)+"',TO_TIMESTAMP('"+datosPersona.get(3)+"','YYYY-MM-DD HH24:MI:SS.FF9'))";
+        statement.executeUpdate(insertar);
+        getConnection().commit();
+        
+        //Inserto una nueva tupla en Federativo
+        insertar = "INSERT INTO FEDERATIVO(NUMERO_PASAPORTE,PAIS_NACIONALIDAD,FECHA_INICIO,PUESTO,CODIGO_EQUIPO) VALUES "
+                + "("+pasaporteNuevo+","+paisNac+",TO_TIMESTAMP("+fechaIni+",'YYYY-MM-DD HH24:MI:SS.FF9'),"
+                + puesto + "," + codEquipo+")";
+        statement.executeUpdate(insertar);
+        getConnection().commit();
     }
     
     public void ejecutarPenaless()

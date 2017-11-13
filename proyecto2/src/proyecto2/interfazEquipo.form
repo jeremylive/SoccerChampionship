@@ -317,6 +317,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Seleccionar Jugador"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="crudEquipo_selectJugadorActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel9">
       <Properties>
@@ -355,6 +358,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Seleccionar Asistente"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="crudEquipo_selectAsistenteActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel10">
       <Properties>
@@ -393,6 +399,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Seleccionar Federativo"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="crudEquipo_selectFederativoActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JTextField" name="crudEquipo_cantFederativo">
       <Properties>
