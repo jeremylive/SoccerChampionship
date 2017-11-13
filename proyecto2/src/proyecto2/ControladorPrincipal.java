@@ -384,7 +384,17 @@ public class ControladorPrincipal
     //Funciones
     public void ejecutarPenaless()
     {
-        
+        if(getTieraron_penales().equals("YES"))
+        {
+            JOptionPane.showMessageDialog(null, "Penales", "Se van a tirar penales", 3);
+            
+            
+            
+            
+            
+        } else {
+            JOptionPane.showMessageDialog(null, "Penales", "No se van a tiraron penales", 3);
+        }
     }
     
     public boolean isInteger(String cadena)
