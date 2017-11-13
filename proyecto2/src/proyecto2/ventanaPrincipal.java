@@ -18,6 +18,7 @@ public class ventanaPrincipal extends javax.swing.JFrame
     public ventanaPrincipal(ControladorPrincipal control) 
     {
         initComponents();
+        //this.tablaQuerysPrincipal.setModel(new DefaultTableModel());
         backGro back = new backGro();
         this.add(back, BorderLayout.CENTER);
         this.pack();  
@@ -52,8 +53,10 @@ public class ventanaPrincipal extends javax.swing.JFrame
         crudEquipo = new javax.swing.JButton();
         crudPartido = new javax.swing.JButton();
         crudPartido1 = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
         tablaQuerysPrincipal = new javax.swing.JTable();
+        jLabel2 = new javax.swing.JLabel();
+        parametro = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -89,6 +92,11 @@ public class ventanaPrincipal extends javax.swing.JFrame
         crudEquipo.setBackground(new java.awt.Color(51, 51, 255));
         crudEquipo.setFont(new java.awt.Font("MS Gothic", 1, 12)); // NOI18N
         crudEquipo.setText("EQUIPO[CRUD]");
+        crudEquipo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                crudEquipoActionPerformed(evt);
+            }
+        });
 
         crudPartido.setBackground(new java.awt.Color(51, 51, 255));
         crudPartido.setFont(new java.awt.Font("MS Gothic", 1, 12)); // NOI18N
@@ -114,7 +122,13 @@ public class ventanaPrincipal extends javax.swing.JFrame
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane2.setViewportView(tablaQuerysPrincipal);
+        jScrollPane1.setViewportView(tablaQuerysPrincipal);
+
+        jLabel2.setBackground(new java.awt.Color(51, 255, 51));
+        jLabel2.setFont(new java.awt.Font("MS PGothic", 1, 13)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("Parametro");
+        jLabel2.setOpaque(true);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -124,10 +138,17 @@ public class ventanaPrincipal extends javax.swing.JFrame
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2)
+                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(opciones, javax.swing.GroupLayout.PREFERRED_SIZE, 431, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(opciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(parametro, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(36, 36, 36)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(crudPartido1, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
                             .addComponent(ejecutar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -148,22 +169,24 @@ public class ventanaPrincipal extends javax.swing.JFrame
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(crudEquipo)
-                            .addComponent(ejecutar))
+                            .addComponent(ejecutar)
+                            .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(crudPartido)
-                            .addComponent(crudPartido1)))
+                            .addComponent(crudPartido1)
+                            .addComponent(parametro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(opciones, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(salir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 423, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
     private void ejecutarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ejecutarActionPerformed
-        controlador.logicaVentanaPrincipal(getOpciones(), getTablaQuerysPrincipal());      
+        controlador.logicaVentanaPrincipal(getOpciones(), getTablaQuerysPrincipal(), parametro.getText());      
     }//GEN-LAST:event_ejecutarActionPerformed
     private void opcionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcionesActionPerformed
     }//GEN-LAST:event_opcionesActionPerformed
@@ -176,14 +199,22 @@ public class ventanaPrincipal extends javax.swing.JFrame
         interfaz.setVisible(true); 
     }//GEN-LAST:event_crudPartidoActionPerformed
 
+    private void crudEquipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crudEquipoActionPerformed
+        crudEquipo interfaz = new crudEquipo(controlador);
+        interfaz.setLocationRelativeTo(null);
+        interfaz.setVisible(true);
+    }//GEN-LAST:event_crudEquipoActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton crudEquipo;
     private javax.swing.JButton crudPartido;
     private javax.swing.JButton crudPartido1;
     private javax.swing.JButton ejecutar;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JComboBox<String> opciones;
+    private javax.swing.JTextField parametro;
     private javax.swing.JButton salir;
     private javax.swing.JTable tablaQuerysPrincipal;
     // End of variables declaration//GEN-END:variables
