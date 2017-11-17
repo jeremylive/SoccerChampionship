@@ -1123,9 +1123,44 @@ public class ControladorPrincipal {
                 JOptionPane.showMessageDialog(null, "La fecha esta con un formato erroneo \nDigitela con este formato:\n Un # entre 0 a 1000 0 más");
                 return 1;
             }
+             setGrupo_clasificatoria(grupoC);
+            setPrimerTiempoRepMin(minPrimerTR);
+            setSegundoTiempoRepMin(minSegundoTR);                
+            setNombre_estadio(nombreEstadio);
+            setTiempo_extra(tiempoExtra);
+            setTieraron_penales(tiraronPenales);
+            setHora_partido(hora);
+            setMin_partido(minutos);
+            setAno_partido(año);
+            setMes_partido(mes);
+            setDia_partido(dia);
+
+            String numeroPartido = ""+interfazPartidos.numero_partido.getText();
+            int newNumero = Integer.parseInt(numeroPartido);
+            newNumero++;
+            interfazPartidos.numero_partido.setText(""+newNumero);
+
+            JOptionPane.showMessageDialog(null, "Felicidades toda su información a insertar esta correcta.");
+
+            //Hago QUERYS........... SQL
+            //-->inserto informacion a la tablas 
+            queryPartido();
+
+            //restauro contador que lleva el orden de un partido 1 y 2 (0 y 1)
+            restaurarContadorP();
+            //Aumento el contador que lleva los partidos max 48
+            upContadorMundial();
+            //Valido si ya llego a 64
+            if(getContadorMundial() <= 64){
+                JOptionPane.showMessageDialog(null, "FELICIDADES, INSERTASTE 64 PARTIDOS");
+            }
+            JOptionPane.showMessageDialog(null, "Felicidades toda su información esta correcta.\nAcabas de insertar el partido numero : "+getContadorMundial());
+        } else {
+            JOptionPane.showMessageDialog(null, "Algún dato en la información no se inserto. \nPorfavor intentar nuevamente... -.-");
 
         }
         return 0;
+    
     }
         
     //--------------Equipos por Confederacion------------------------

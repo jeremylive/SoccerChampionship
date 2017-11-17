@@ -153,7 +153,7 @@ public class interfazPartidos extends javax.swing.JFrame
 
         jLabel6.setText("Hora:");
 
-        nombreEstadio.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Belo Horizonte", "Brasilia", "Cuiabá", "Curitiba", "Fortaleza", "Natal", "Recife", "Río de Janeiro", "Salvador", "São Paulo", "Porto Alegre", "Manaos" }));
+        nombreEstadio.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Belo Horizonte", "Brasilia", "Cuiabá", "Curitiba", "Fortaleza", "Natal", "Recife", "Río de Janeiro", "Salvador", "São Paulo", "Porto Alegre", "Manaos", "Pantanal" }));
 
         jLabel7.setText("Cantidad aficionados:");
 
@@ -737,8 +737,10 @@ public class interfazPartidos extends javax.swing.JFrame
         
     }//GEN-LAST:event_cargarEq1ActionPerformed
     private void ejecutarCrudPartidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ejecutarCrudPartidoActionPerformed
+        System.out.println("entro1");
         try {      
             control.cargarEquipos(equipo1.getSelectedItem().toString(), equipo2.getSelectedItem().toString(), nombreEstadio.getSelectedItem().toString(), cantAficionados.getText(), jugaronTiemposExtras.getSelectedItem().toString(), tiraronPenales.getSelectedItem().toString(), grupo_clasificatoria.getSelectedItem().toString(), primerTiempoR.getSelectedItem().toString(), segundoTiempoR.getSelectedItem().toString(), hora.getSelectedItem().toString(), minutos.getSelectedItem().toString(), año.getSelectedItem().toString(), mes.getSelectedItem().toString(), dia.getSelectedItem().toString());
+            System.out.println("entro2");
         } catch (SQLException ex) {
             System.err.println("ERROR: " + ex.getMessage());
             if(control.getConnection()!=null)

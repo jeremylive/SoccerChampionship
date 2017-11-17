@@ -624,7 +624,7 @@
     <Component class="javax.swing.JComboBox" name="nombreEstadio">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="12">
+          <StringArray count="13">
             <StringItem index="0" value="Belo Horizonte"/>
             <StringItem index="1" value="Brasilia"/>
             <StringItem index="2" value="Cuiab&#xe1;"/>
@@ -637,6 +637,7 @@
             <StringItem index="9" value="S&#xe3;o Paulo"/>
             <StringItem index="10" value="Porto Alegre"/>
             <StringItem index="11" value="Manaos"/>
+            <StringItem index="12" value="Pantanal"/>
           </StringArray>
         </Property>
       </Properties>
