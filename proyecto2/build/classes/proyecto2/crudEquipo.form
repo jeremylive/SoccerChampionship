@@ -24,30 +24,15 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="96" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="subir" min="-2" pref="192" max="-2" attributes="0"/>
-                  <Component id="crear" min="-2" pref="192" max="-2" attributes="0"/>
-              </Group>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
-                      <Component id="leer" min="-2" pref="192" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="borrar" min="-2" pref="192" max="-2" attributes="0"/>
-                  </Group>
-              </Group>
-              <EmptySpace max="32767" attributes="0"/>
-          </Group>
-          <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jLabel1" max="32767" attributes="0"/>
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                      <Component id="salir" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Component id="crear" min="-2" pref="216" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="rud" min="-2" pref="260" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="salir" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -57,26 +42,16 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
               <Component id="jLabel1" min="-2" pref="60" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
-                      <Component id="leer" min="-2" pref="153" max="-2" attributes="0"/>
-                      <EmptySpace pref="167" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="crear" alignment="3" min="-2" pref="39" max="-2" attributes="0"/>
+                      <Component id="rud" alignment="3" min="-2" pref="39" max="-2" attributes="0"/>
                   </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <Component id="crear" min="-2" pref="153" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="subir" alignment="3" min="-2" pref="153" max="-2" attributes="0"/>
-                          <Component id="borrar" alignment="3" min="-2" pref="153" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
+                  <Component id="salir" alignment="0" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace pref="38" max="32767" attributes="0"/>
-              <Component id="salir" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -88,27 +63,21 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="MS Gothic" size="18" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="CRUD(CREATE[CREAR].READ[LEER].UPDATE[SUBIR].DELETE[BORRAR])"/>
+        <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="text" type="java.lang.String" value="CRUD (Create Read Update Delete) DE EQUIPOS"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="subir">
+    <Component class="javax.swing.JButton" name="rud">
       <Properties>
-        <Property name="text" type="java.lang.String" value="[SUBIR]"/>
+        <Property name="text" type="java.lang.String" value="LEER|ACTUALIZAR|BORRAR"/>
       </Properties>
-    </Component>
-    <Component class="javax.swing.JButton" name="leer">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="[LEER]"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JButton" name="borrar">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="[BORRAR]"/>
-      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rudActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="crear">
       <Properties>
-        <Property name="text" type="java.lang.String" value="[CREAR]"/>
+        <Property name="text" type="java.lang.String" value="CREAR"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="crearActionPerformed"/>
