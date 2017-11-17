@@ -228,7 +228,7 @@
           <Font name="Tahoma" size="11" style="3"/>
         </Property>
         <Property name="horizontalAlignment" type="int" value="0"/>
-        <Property name="text" type="java.lang.String" value="Interfaz Equipo CRUD"/>
+        <Property name="text" type="java.lang.String" value="Interfaz Equipo Create"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
