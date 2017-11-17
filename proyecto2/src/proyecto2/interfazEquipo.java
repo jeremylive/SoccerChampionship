@@ -90,7 +90,7 @@ public class interfazEquipo extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 3, 11)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Interfaz Equipo CRUD");
+        jLabel1.setText("Interfaz Equipo Create");
 
         jLabel2.setText("Codigo de Equipo:");
 
@@ -377,7 +377,7 @@ public class interfazEquipo extends javax.swing.JFrame {
             Statement statement = connection.createStatement();
 
             //Realiza el query
-            String query = "SELECT * FROM ENTRENADOR";
+            String query = "SELECT * FROM ENTRENADOR ORDER BY NUMERO_PASAPORTE";
             ResultSet output = statement.executeQuery(query);
 
             //Obtengo los metadatos y nombres de columnas
@@ -414,7 +414,7 @@ public class interfazEquipo extends javax.swing.JFrame {
             Statement statement = connection.createStatement();
 
             //Realiza el query
-            String query = "SELECT * FROM JUGADOR";
+            String query = "SELECT * FROM JUGADOR ORDER BY NUMERO_PASAPORTE";
             ResultSet output = statement.executeQuery(query);
 
             //Obtengo los metadatos y nombres de columnas
@@ -451,7 +451,7 @@ public class interfazEquipo extends javax.swing.JFrame {
             Statement statement = connection.createStatement();
 
             //Realiza el query
-            String query = "SELECT * FROM FEDERATIVO";
+            String query = "SELECT * FROM FEDERATIVO ORDER BY NUMERO_PASAPORTE";
             ResultSet output = statement.executeQuery(query);
 
             //Obtengo los metadatos y nombres de columnas
@@ -488,7 +488,7 @@ public class interfazEquipo extends javax.swing.JFrame {
             Statement statement = connection.createStatement();
 
             //Realiza el query
-            String query = "SELECT * FROM ASISTENTE";
+            String query = "SELECT * FROM ASISTENTE ORDER BY NUMERO_PASAPORTE";
             ResultSet output = statement.executeQuery(query);
 
             //Obtengo los metadatos y nombres de columnas
