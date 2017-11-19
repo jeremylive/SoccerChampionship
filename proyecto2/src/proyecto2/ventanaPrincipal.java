@@ -186,7 +186,7 @@ public class ventanaPrincipal extends javax.swing.JFrame
         pack();
     }// </editor-fold>//GEN-END:initComponents
     private void ejecutarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ejecutarActionPerformed
-        controlador.logicaVentanaPrincipal(getOpciones(), getTablaQuerysPrincipal(), parametro.getText());      
+        controlador.logicaVentanaPrincipal(getOpciones(), parametro.getText());      
     }//GEN-LAST:event_ejecutarActionPerformed
     private void opcionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcionesActionPerformed
     }//GEN-LAST:event_opcionesActionPerformed
@@ -216,6 +216,6 @@ public class ventanaPrincipal extends javax.swing.JFrame
     private javax.swing.JComboBox<String> opciones;
     private javax.swing.JTextField parametro;
     private javax.swing.JButton salir;
-    private javax.swing.JTable tablaQuerysPrincipal;
+    public static javax.swing.JTable tablaQuerysPrincipal;
     // End of variables declaration//GEN-END:variables
 }

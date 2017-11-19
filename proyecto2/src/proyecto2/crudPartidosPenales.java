@@ -1,5 +1,9 @@
 package proyecto2;
 
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author live
@@ -26,7 +30,7 @@ public class crudPartidosPenales extends javax.swing.JFrame
         jLabel27 = new javax.swing.JLabel();
         seAnotoPenal = new javax.swing.JComboBox<>();
         ejecutarPenal = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        numPenal = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -47,7 +51,7 @@ public class crudPartidosPenales extends javax.swing.JFrame
             }
         });
 
-        jLabel1.setText("1");
+        numPenal.setText("1");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -73,7 +77,7 @@ public class crudPartidosPenales extends javax.swing.JFrame
                         .addGap(24, 24, 24)
                         .addComponent(jLabel26)
                         .addGap(18, 18, 18)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(numPenal, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap(32, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
@@ -88,7 +92,7 @@ public class crudPartidosPenales extends javax.swing.JFrame
                 .addGap(14, 14, 14)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel26)
-                    .addComponent(jLabel1))
+                    .addComponent(numPenal))
                 .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel25)
@@ -106,18 +110,21 @@ public class crudPartidosPenales extends javax.swing.JFrame
     }// </editor-fold>//GEN-END:initComponents
 
     private void ejecutarPenalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ejecutarPenalActionPerformed
-        control.queryPenales();
-        
+        try {
+           control.queryPenales2(numPenal.getText(), seAnotoPenal.getSelectedItem().toString(), passJugadorPenal.getText());
+        } catch (SQLException ex) {
+            Logger.getLogger(interfazPartidos.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_ejecutarPenalActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ejecutarPenal;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
-    private javax.swing.JTextField passJugadorPenal;
-    private javax.swing.JComboBox<String> seAnotoPenal;
+    public static javax.swing.JLabel numPenal;
+    public static javax.swing.JTextField passJugadorPenal;
+    public static javax.swing.JComboBox<String> seAnotoPenal;
     // End of variables declaration//GEN-END:variables
 }

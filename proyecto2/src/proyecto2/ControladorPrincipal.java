@@ -18,17 +18,26 @@ public class ControladorPrincipal {
 
     //Variables globales
     private String option;
-    private int contadorPrincipal;//de 0 a 1
-    private int contadorMundial; //limite 48
+    //private int contadorMundial = 0; //limite 48
     private ArrayList<String> equiposMundial = new ArrayList<String>();
     private ResultSet output;            //Guarda el resultado del query
     private ResultSetMetaData metaDatos;
     private Statement statement;
     private Connection connection;
     private int numero_partido = 0;
-    private DefaultTableModel tabla;
+    //private DefaultTableModel tabla;
     private int quienGanoPartido;
     private String codigoEquipo;
+    private String codigoEquipoAnterior;
+    //Variables GRUPOS Y CLASIFICACIOENS
+    private int posicion=0, puntos_eq1=0, puntos_eq2=0, pj_eq1=0, pj_eq2=0, pg_eq1=0, pg_eq2=0, pe_eq1=0, pe_eq2=0, pp_eq1=0, pp_eq2=0, gf_eq1=0, gf_eq2=0, gc_eq1=0, gc_eq2=0, dif_eq1=0, dif_eq2=0;
+        
+    //Contadores
+    private int contTitulares1;
+    private int contTitulares2;
+    private int contSuplentes1;
+    private int contSuplentes2;
+    
     
     //Variables de PartidoCRUD
     private String equipo_1;
@@ -69,7 +78,6 @@ public class ControladorPrincipal {
     //Constructor
     public ControladorPrincipal() {
         this.option = "";
-        this.contadorPrincipal = 0;
     }
 
     //Gets and Sets
@@ -80,19 +88,7 @@ public class ControladorPrincipal {
     public String getOption() {
         return this.option;
     }
-
-    public void aumentarContador() {
-        this.contadorPrincipal++;
-    }
-
-    public void restaurarContadorP() {
-        this.contadorPrincipal = 0;
-    }
-
-    public int getContadorP() {
-        return contadorPrincipal;
-    }
-
+/*
     public int getContadorMundial() {
         return contadorMundial;
     }
@@ -100,7 +96,7 @@ public class ControladorPrincipal {
     public void upContadorMundial() {
         this.contadorMundial++;
     }
-
+¨*/
     public ResultSet getOutput() {
         return output;
     }
@@ -147,10 +143,6 @@ public class ControladorPrincipal {
 
     public void setEquiposMundial(String equiposMundiall) {
         this.equiposMundial.add(equiposMundiall);
-    }
-
-    public void setContadorPrincipal(int contadorPrincipal) {
-        this.contadorPrincipal = contadorPrincipal;
     }
 
     public String getEquipo_1() {
@@ -392,7 +384,7 @@ public class ControladorPrincipal {
     public void setNumero_partido(int numero_partido) {
         this.numero_partido = numero_partido;
     }
-
+    /*
     public DefaultTableModel getTabla() {
         return tabla;
     }
@@ -400,7 +392,7 @@ public class ControladorPrincipal {
     public void setTabla(DefaultTableModel tabla) {
         this.tabla = tabla;
     }
-    
+    */
     public String getCodigoEquipo() {
         return codigoEquipo;
     }
@@ -520,7 +512,6 @@ public class ControladorPrincipal {
     }
     
     //INSERTO EN LA TABLA PERSONA Y ASISTENTE
-
     public void crearAsistenteEquipo(int pasaporteReal, String paisNac, String fechaIni, String tipoAsist, String codEquipo) throws SQLException {
         //Hago conexion
         connection = Conexion.getConexion();
@@ -603,8 +594,8 @@ public class ControladorPrincipal {
         statement.executeUpdate(insertar);
         getConnection().commit();
     }
-        
-    //Operacion equipos por confederacion
+    
+    // CRUD EQUIPO.. borrar
     public void borrarEquipo(String codEquipo) throws SQLException {
         //Hago conexion
         connection = Conexion.getConexion();
@@ -672,6 +663,7 @@ public class ControladorPrincipal {
         connection.commit();
     }
 
+    //Actualizar equipos... CRUD EQUIPO - se utilizo una transaccion
     public void actualizarEquipo(String codEquipoAnterior, String codEquipoNuevo, String nombre, String grupoIni, String codConfed) {
         //Hago conexion
         connection = Conexion.getConexion();
@@ -714,6 +706,7 @@ public class ControladorPrincipal {
         }
     }
 
+    //Operacion tabla equipos por confederacion
     public void queryEquiposPorConfed(String codConfed) {
         try {
             //Hago conexion
@@ -759,7 +752,7 @@ public class ControladorPrincipal {
             }
 
             //Muestro los resultados
-            DefaultTableModel modelo = this.getTabla();
+            DefaultTableModel modelo = (DefaultTableModel) ventanaPrincipal.tablaQuerysPrincipal.getModel();
             modelo.setDataVector(filas, nombreColumnas);
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al realizar la consulta");
@@ -808,7 +801,7 @@ public class ControladorPrincipal {
             }
 
             //Muestro los resultados
-            DefaultTableModel modelo = this.getTabla();
+            DefaultTableModel modelo = (DefaultTableModel) ventanaPrincipal.tablaQuerysPrincipal.getModel();;
             modelo.setDataVector(filas, nombreColumnas);
 
         } catch (SQLException ex) {
@@ -825,6 +818,25 @@ public class ControladorPrincipal {
         
         //se deshabilita el modo de confirmación automática
         connection.setAutoCommit(false);
+        
+        //Creo query´s
+        String insertCUERPO_Principal = "INSERT INTO CUERPO_ARBITRAL VALUES ("+getNumero_partido()+","+getArbitro_principal()+",'Principal')";
+        String insertCUERPO_Asist1 = "INSERT INTO CUERPO_ARBITRAL VALUES ("+getNumero_partido()+","+getArbitro_asistente_1()+",'Asistente')";
+        String insertCUERPO_Asist2 = "INSERT INTO CUERPO_ARBITRAL VALUES ("+getNumero_partido()+","+getArbitro_asistente_2()+",'Asistente')";
+        String insertCUERPO_4to = "INSERT INTO CUERPO_ARBITRAL VALUES ("+getNumero_partido()+","+getArbitro_4to()+",'Cuarto')";
+        String insertCUERPO_5to = "INSERT INTO CUERPO_ARBITRAL VALUES ("+getNumero_partido()+","+getArbitro_5to()+",'Quinto')";
+        
+        //INSERTS A PARTIDO_CAMBIOS
+        statement.executeUpdate(insertCUERPO_Principal);
+        statement.executeUpdate(insertCUERPO_Asist1);
+        statement.executeUpdate(insertCUERPO_Asist2);
+        statement.executeUpdate(insertCUERPO_4to);
+        statement.executeUpdate(insertCUERPO_5to);        
+        getConnection().commit();
+
+        //se habilita el modo de confirmación automática
+        connection.setAutoCommit(true);
+        
     }
     
 
@@ -863,14 +875,39 @@ public class ControladorPrincipal {
             connection = Conexion.getConexion();
             statement = connection.createStatement();  
             statement.executeUpdate(cambios);
-            getConnection().commit();   
+            getConnection().commit();
+            
+            //Valido que no se pase de 3 cambios por equipo
+            String cambio = interfazPartidos.cambiosHechos.getText();
+            if(cambio == "0"){
+                //SETEO EL EQUIPO PARA HACER LA COMPARACION DESPUES
+                codigoEquipoAnterior = getCodigoEquipo();
+                
+                //Aumento cambio
+                int Numchange =Integer.parseInt(cambio);
+                Numchange++;
+
+                //Actualizo interfaz con el contador modificado
+                String change = Integer.toString(Numchange);
+                interfazPartidos.cambiosHechos.setText(change);
+            }else if(getCodigoEquipo().equals(codigoEquipoAnterior)){
+                //Aumento cambio
+                int Numchange =Integer.parseInt(cambio);
+                Numchange++;
+
+                //Actualizo interfaz con el contador modificado
+                String change = Integer.toString(Numchange);
+                interfazPartidos.cambiosHechos.setText(change);
+
+            }
+            
         } else {
             JOptionPane.showMessageDialog(null, "Algún dato en la información no se inserto. \nPorfavor intentar nuevamente... -.-");
         }
         return 0;
     }
     
-    //INSERTO EN LA TABLA PARTIDO_PARTICIPA Y EN PARTIDO
+    //INSERTO EN LA TABLA PARTIDO_PARTICIPA Y EN PARTIDO - Se usa una transaccion
     public void queryPartido() throws SQLException 
     {   
         //Hago conexion
@@ -902,10 +939,7 @@ public class ControladorPrincipal {
         connection.setAutoCommit(true);
     }
 
-    //Contadores
-    int contTitulares1, contTitulares2, contSuplentes1, contSuplentes2;
-    
-    //Inserto titulares EQUIPO_1, titulares EQUIPO_2
+    //Inserto en la tabla de titulares.. de equipo1
     public int titulares1(String jugadorTitular, String codEquipo) throws SQLException
     {
         //Valido info 
@@ -914,7 +948,7 @@ public class ControladorPrincipal {
             setCodigoEquipo(codEquipo);
         }
        
-        if(contTitulares1 <= 12){
+        if(contTitulares1 < 12){
             
             String insertTitulares = "INSERT INTO PARTIDO_TITULARES VALUES ("+getNumero_partido()+","+getJugadores_titulares()+",'"+getCodigoEquipo()+"')";
             
@@ -934,6 +968,7 @@ public class ControladorPrincipal {
         return 0;
     }
     
+    //Inserto en la tabla de titulares.. de equipo2
     public int titulares2(String jugadorTitular, String codEquipo) throws SQLException
     {
         //Valido info 
@@ -942,7 +977,7 @@ public class ControladorPrincipal {
             setCodigoEquipo(codEquipo);
         }
        
-        if(contTitulares2 <= 12){
+        if(contTitulares2 < 12){
             
             String insertTitulares2 = "INSERT INTO PARTIDO_TITULARES VALUES ("+getNumero_partido()+","+getJugadores_titulares()+",'"+getCodigoEquipo()+"')";
             
@@ -962,7 +997,7 @@ public class ControladorPrincipal {
         return 0;
     }
     
-    //Inserto Suplentes EQUIPO_1, Suplentes EQUIPO_2
+    //Inserto en la tabla de suplentes... suplentes del equipo1
     public int suplentes1(String jugadorSuplente, String codEquipo) throws SQLException
     {
         //Valido info 
@@ -971,7 +1006,7 @@ public class ControladorPrincipal {
             setCodigoEquipo(codEquipo);
         }
        
-        if(contSuplentes2 <= 11){
+        if(contSuplentes1 < 11){
             
             String insertSuplentes1 = "INSERT INTO PARTIDO_SUPLENTES VALUES ("+getNumero_partido()+","+getJugadores_titulares()+",'"+getCodigoEquipo()+"')";
             
@@ -991,6 +1026,7 @@ public class ControladorPrincipal {
         return 0;
     }
     
+    //Inserto en la tabla de suplentes... suplentes del equipo2
     public int suplentes2(String jugadorSuplente, String codEquipo) throws SQLException
     {
         //Valido info 
@@ -999,7 +1035,7 @@ public class ControladorPrincipal {
             setCodigoEquipo(codEquipo);
         }
        
-        if(contSuplentes2 <= 11){
+        if(contSuplentes2 < 11){
             
             String insertSuplentes2 = "INSERT INTO PARTIDO_SUPLENTES VALUES ("+getNumero_partido()+","+getJugadores_titulares()+",'"+getCodigoEquipo()+"')";
             
@@ -1063,17 +1099,47 @@ public class ControladorPrincipal {
     
     
     //Interfaz penales
-    public void queryPenales() {
+    public void queryPenales() 
+    {
         if (getTieraron_penales().equals("YES")) {
             crudPartidosPenales crudPenales = new crudPartidosPenales(this);
             crudPenales.setLocationRelativeTo(null);
             crudPenales.setVisible(true);
             
-            JOptionPane.showMessageDialog(null, "Penales", "Se van a tirar penales", 1);
+            JOptionPane.showMessageDialog(null, "Si Penales", "Se van a tirar penales", 1);
         } else {
-            JOptionPane.showMessageDialog(null, "Penales", "No se van a tiraron penales", 3);
+            JOptionPane.showMessageDialog(null, "No Penales", "No se van a tiraron penales", 3);
         }
     }
+    
+    //Logica de interfaz penales
+   public int queryPenales2(String numPenal, String seAnoto, String idJugador) throws SQLException
+   {
+       //Valido la info
+       if(!(isInteger(idJugador))){
+           JOptionPane.showMessageDialog(null, "El idJugador insertado no es valido");
+           return 1;
+       }
+       
+       //Hago conexion
+        connection = Conexion.getConexion();
+        statement = connection.createStatement();  
+                
+        //Creo query
+        String query1 = "INSERT INTO PENALES VALUES ("+numPenal+",'"+seAnoto+"',"+idJugador+")";
+        
+        //Ejecuto query
+        statement.executeUpdate(query1);
+        getConnection().commit();  
+       
+        //Aumento el numero de penal
+        int newNum = Integer.parseInt(numPenal);
+        newNum++;
+        String newNumString = Integer.toString(newNum);
+        crudPartidosPenales.numPenal.setText(newNumString);
+        
+        return 0;
+   }
     
     
     //Valida que el parametro es int
@@ -1088,12 +1154,210 @@ public class ControladorPrincipal {
         }
     }
     
-    public void cargarEquipo1(){
+    //Carga la tabla de equipo1
+    public void cargarEquipo1(String codEq) throws SQLException
+    {
+        //Hago conexion
+        connection = Conexion.getConexion();
+        statement = connection.createStatement();
+
+        //Ejecuto el query
+        String query = "SELECT * FROM EQUIPO WHERE EQUIPO.CODIGO_PAIS = "+codEq;
+        output = statement.executeQuery(query);
+        //Obtengo los metadatos y nombres de columnas
+        metaDatos = output.getMetaData();
+        int index = metaDatos.getColumnCount();
+
+        Vector nombreColumnas = new Vector();
+        for (int i = 1; i <= index; i++) {
+            nombreColumnas.add(metaDatos.getColumnLabel(i));
+        }
+
+        //Obtengo las tuplas en un vector que contiene vectores
+        Vector filas = new Vector();
+        while (output.next()) {
+            //Añado al vector de datos
+            Vector tupla = new Vector();
+            for (int i = 1; i <= index; i++) {
+                tupla.add(output.getString(i));
+            }
+            filas.add(tupla);
+        }
+
+        //Muestro los resultados
+        DefaultTableModel modelo = (DefaultTableModel) interfazPartidos.tabla_Jugadores1.getModel();
+        modelo.setDataVector(filas, nombreColumnas);
+        
+    }
+ 
+    //Carga la tabla de equipo1
+    public void cargarEquipo2(String codEq) throws SQLException
+    {
+        //Hago conexion
+        connection = Conexion.getConexion();
+        statement = connection.createStatement();
+
+        //Ejecuto el query
+        String query = "SELECT * FROM EQUIPO WHERE EQUIPO.CODIGO_PAIS = "+codEq;
+        output = statement.executeQuery(query);
+        //Obtengo los metadatos y nombres de columnas
+        metaDatos = output.getMetaData();
+        int index = metaDatos.getColumnCount();
+
+        Vector nombreColumnas = new Vector();
+        for (int i = 1; i <= index; i++) {
+            nombreColumnas.add(metaDatos.getColumnLabel(i));
+        }
+
+        //Obtengo las tuplas en un vector que contiene vectores
+        Vector filas = new Vector();
+        while (output.next()) {
+            //Añado al vector de datos
+            Vector tupla = new Vector();
+            for (int i = 1; i <= index; i++) {
+                tupla.add(output.getString(i));
+            }
+            filas.add(tupla);
+        }
+
+        //Muestro los resultados
+        DefaultTableModel modelo = (DefaultTableModel) interfazPartidos.tabla_Jugadores_equipo2.getModel();
+        modelo.setDataVector(filas, nombreColumnas);
         
     }
     
+    //carga arbitros en la interfaz
+    public void cargarArbitro() throws SQLException
+    {
+        //Hago conexion
+        connection = Conexion.getConexion();
+        statement = connection.createStatement();
+
+        //Ejecuto el query
+        String query = "SELECT * FROM ARBITRO";
+        output = statement.executeQuery(query);
+        //Obtengo los metadatos y nombres de columnas
+        metaDatos = output.getMetaData();
+        int index = metaDatos.getColumnCount();
+
+        Vector nombreColumnas = new Vector();
+        for (int i = 1; i <= index; i++) {
+            nombreColumnas.add(metaDatos.getColumnLabel(i));
+        }
+
+        //Obtengo las tuplas en un vector que contiene vectores
+        Vector filas = new Vector();
+        while (output.next()) {
+            //Añado al vector de datos
+            Vector tupla = new Vector();
+            for (int i = 1; i <= index; i++) {
+                tupla.add(output.getString(i));
+            }
+            filas.add(tupla);
+        }
+
+        //Muestro los resultados
+        DefaultTableModel modelo = (DefaultTableModel) interfazPartidos.tablaAlbitros.getModel();
+        modelo.setDataVector(filas, nombreColumnas);
+        
+    }
     
-   
+    //Creo tabla grupos clasificaciones
+    public void queryCreoTablaGrupos() 
+    {
+        try{
+            //Hago conexion
+            connection = Conexion.getConexion();
+            statement = connection.createStatement();
+
+            //Ejecuto el query
+            String query = "CREATE TABLE GRUPO_CLASIFICAIONES( POSICION INT, EQUIPO CHAR(20), PUNTOS INT, PJ INT, PG INT, PE INT, PP INT, GF INT, GC INT, DIF INT )";
+            statement.execute(query);
+        }catch(SQLException ex){
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+    }
+    
+    //inserto en la tabla grupo_clasificaiones
+    public void queryInsetoTablaGruposClasificaciones(String eq1, String eq2) throws SQLException
+    {
+        int golesEq1=0, golesEq2=0;
+        //Hago conexion
+        connection = Conexion.getConexion();
+        statement = connection.createStatement();
+
+        //Obtengo gf eq1
+        String consulta1 = "SELECT COUNT(GOLES.NUMPARTIDO) FROM GOLES JOIN EQUIPO ON GOLES.CODIGO_PAIS = EQUIPO."+eq1;
+        output = statement.executeQuery(consulta1);
+        metaDatos = output.getMetaData();
+        while (output.next()) {
+            gf_eq1 += Integer.parseInt(output.getString(0));
+            golesEq1 = Integer.parseInt(output.getString(0));
+        }
+        //Obtengo gf eq2
+        String consulta11 = "SELECT COUNT(GOLES.NUMPARTIDO) FROM GOLES JOIN EQUIPO ON GOLES.CODIGO_PAIS = EQUIPO."+eq2;
+        output = statement.executeQuery(consulta11);
+        metaDatos = output.getMetaData();
+        while (output.next()) {
+            gf_eq2 += Integer.parseInt(output.getString(0));
+            golesEq2 = Integer.parseInt(output.getString(0));
+        }
+        //Obtengo gc eq1 y eq2
+        gc_eq1 += gf_eq2;
+        gc_eq2 += gf_eq1;
+        //Obtengo dif  ...  gf - gc
+        dif_eq1 += gf_eq1 - gc_eq1;
+        dif_eq2 += gf_eq2 - gc_eq2;
+        //Pg y pp y pj
+        if(golesEq1 > golesEq2){
+            pg_eq1++;
+            pp_eq2++;
+            pj_eq1++;
+            pj_eq2++;
+        }else if(golesEq1 < golesEq2){
+            pg_eq2++;
+            pp_eq1++;
+            pj_eq1++;
+            pj_eq2++;
+        }else if(golesEq1 == golesEq2){
+            pe_eq1++;
+            pe_eq2++;
+            pj_eq1++;
+            pj_eq2++;
+        }
+        
+        //Puntos: 3 x cada PG, 1 x cada PE
+        pg_eq1 += (pg_eq1*3)+(pe_eq1);
+        pg_eq2 += (pg_eq2*3)+(pe_eq2);        
+        
+        //Consulta para sacar el nombre del equipo
+        String consult1 = "SELECT NOMBRE_PAIS FROM EQUIPO WHERE EQUIPO.CODIGO_CONF = "+eq1;
+        String consult2 = "SELECT NOMBRE_PAIS FROM EQUIPO WHERE EQUIPO.CODIGO_CONF = "+eq2;     
+        output = statement.executeQuery(consult1);
+        metaDatos = output.getMetaData();
+        while (output.next()) {
+            eq1 += Integer.parseInt(output.getString(0));
+        }
+        //
+        output = statement.executeQuery(consult2);
+        metaDatos = output.getMetaData();
+        while (output.next()) {
+            eq2 += Integer.parseInt(output.getString(0));
+        }
+        
+        //Ejecuto el query
+        String query1 = "INSERT INTO GRUPO_CLASIFICAIONES VALUES ("+posicion+",'"+eq1+"',"+puntos_eq1+","+pj_eq1+","+pg_eq1+","+pe_eq1+","+pp_eq1+","+gf_eq1+","+gc_eq1+","+dif_eq1+")";
+        posicion++;
+        String query2 = "INSERT INTO GRUPO_CLASIFICAIONES VALUES ("+posicion+",'"+eq2+"',"+puntos_eq2+","+pj_eq2+","+pg_eq2+","+pe_eq2+","+pp_eq2+","+gf_eq2+","+gc_eq2+","+dif_eq2+")";
+        
+        statement.executeUpdate(query1);
+        statement.executeUpdate(query2);
+        getConnection().commit();  
+        
+        posicion++;
+    }
+            
+    
     /**
      * Funcion Inserto partido
      *
@@ -1123,7 +1387,7 @@ public class ControladorPrincipal {
                 JOptionPane.showMessageDialog(null, "La fecha esta con un formato erroneo \nDigitela con este formato:\n Un # entre 0 a 1000 0 más");
                 return 1;
             }
-             setGrupo_clasificatoria(grupoC);
+            setGrupo_clasificatoria(grupoC);
             setPrimerTiempoRepMin(minPrimerTR);
             setSegundoTiempoRepMin(minSegundoTR);                
             setNombre_estadio(nombreEstadio);
@@ -1142,19 +1406,21 @@ public class ControladorPrincipal {
 
             JOptionPane.showMessageDialog(null, "Felicidades toda su información a insertar esta correcta.");
 
-            //Hago QUERYS........... SQL
-            //-->inserto informacion a la tablas 
+            //INSERTO EN LA TABLA PARTIDO_PARTICIPA Y EN PARTIDO - Se usa una transaccion
             queryPartido();
 
-            //restauro contador que lleva el orden de un partido 1 y 2 (0 y 1)
-            restaurarContadorP();
-            //Aumento el contador que lleva los partidos max 48
-            upContadorMundial();
+            //INSERTO EN TABLA PENALES SI ES QUE HAY PENALES
+            queryPenales();
+            
+            //actualizo datos.. quien gano el partido?
+            //INSERTO EN LA TABLA DE GRUPOS Y CLASIFICACIONES
+            queryInsetoTablaGruposClasificaciones(equipo1, equipo2);
+            
             //Valido si ya llego a 64
-            if(getContadorMundial() <= 64){
+            if(newNumero <= 64){
                 JOptionPane.showMessageDialog(null, "FELICIDADES, INSERTASTE 64 PARTIDOS");
             }
-            JOptionPane.showMessageDialog(null, "Felicidades toda su información esta correcta.\nAcabas de insertar el partido numero : "+getContadorMundial());
+            JOptionPane.showMessageDialog(null, "Felicidades toda su información esta correcta.\nAcabas de insertar el partido numero : "+newNumero);
         } else {
             JOptionPane.showMessageDialog(null, "Algún dato en la información no se inserto. \nPorfavor intentar nuevamente... -.-");
 
@@ -1174,7 +1440,7 @@ public class ControladorPrincipal {
         JOptionPane.showMessageDialog(null, "ACABAS DE HACER LA CONSULTA: INFORME OFICIAL DEL PARTIDO");
     }
 
-    //----------------------
+    //----------------------Informacion del campeonato, grupo clasificatoria----
     public void grupoClasificaciones() {
         JOptionPane.showMessageDialog(null, "ACABAS DE HACER LA CONSULTA: GRUPOS Y CLASIFICACIONES");
 
@@ -1191,9 +1457,10 @@ public class ControladorPrincipal {
         queryGoleadores();
     }
 
-    public void logicaVentanaPrincipal(String operacion, DefaultTableModel tabla1, String parametro) {
-        //Seteo tabla
-        setTabla(tabla1);
+    public void logicaVentanaPrincipal(String operacion, String parametro) 
+    {
+        //Creo la tabla grupos por clasificaion para poder insertarle tuplas despues
+        queryCreoTablaGrupos();
         //Seteo la option a la variable global
         setOption(operacion);
         //Menu de control para las opciones deisponibles
