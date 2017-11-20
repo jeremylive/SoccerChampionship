@@ -7,8 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -853,7 +851,7 @@ public class ControladorPrincipal {
             JOptionPane.showMessageDialog(null, "Error al realizar la consulta");
         }
     }
-    
+
     //INSERTO EN LA TABLA CUERPO_ARBITRAL USANDO UNA TRANSACCION
     public void ejecutarArbitro(String pasaportePrinc, String pasaporteAsis1, String pasaporteAsis2, String pasaporteCuarto, String pasaporteQuinto) throws SQLException {
         //Hago conexion
@@ -1375,10 +1373,11 @@ public class ControladorPrincipal {
     public void infoPartido(String parametro) {
         JOptionPane.showMessageDialog(null, "ACABAS DE HACER LA CONSULTA: INFORME OFICIAL DEL PARTIDO");
         interfazInformePartido interfaz;
-        if(!parametro.equals(""))
+        if (!parametro.equals("")) {
             interfaz = new interfazInformePartido(parametro);
-        else
+        } else {
             interfaz = new interfazInformePartido();
+        }
         interfaz.setLocationRelativeTo(null);
         interfaz.setVisible(true);
     }
@@ -1398,6 +1397,44 @@ public class ControladorPrincipal {
     public void goleadores() throws SQLException {
         JOptionPane.showMessageDialog(null, "ACABAS DE HACER LA CONSULTA: TABLA DE GOLEADORES");
         queryGoleadores();
+    }
+
+    //Consulta al diccionario de datos
+    public void consultaDD(String parametro) throws SQLException {
+        //Hago conexion
+        connection = Conexion.getConexion();
+        statement = connection.createStatement();
+
+        //Ejecuto el query
+        String query = "SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE, DATA_LENGTH FROM USER_TAB_COLUMNS";
+        if (!parametro.equals("")) {
+            query += " WHERE TABLE_NAME = '" + parametro + "'";
+        }
+        query += " ORDER BY TABLE_NAME";
+        output = statement.executeQuery(query);
+
+        //Obtengo los metadatos y nombres de columnas
+        metaDatos = output.getMetaData();
+        int index = metaDatos.getColumnCount();
+
+        Vector nombreColumnas = new Vector();
+        for (int i = 1; i <= index; i++) {
+            nombreColumnas.add(metaDatos.getColumnLabel(i));
+        }
+
+        //Obtengo las tuplas en un vector que contiene vectores
+        Vector filas = new Vector();
+        while (output.next()) {
+            Vector tupla = new Vector();
+            for (int i = 1; i <= index; i++) {
+                tupla.add(output.getString(i));
+            }
+            filas.add(tupla);
+        }
+
+        //Muestro los resultados
+        DefaultTableModel modelo = (DefaultTableModel) ventanaPrincipal.tablaQuerysPrincipal.getModel();
+        modelo.setDataVector(filas, nombreColumnas);
     }
 
     public void logicaVentanaPrincipal(String operacion, String parametro) {
