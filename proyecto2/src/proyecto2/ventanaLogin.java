@@ -162,6 +162,13 @@ public class ventanaLogin extends javax.swing.JFrame
             ventanaPrincipal interfaz2 = new ventanaPrincipal(control);
             interfaz2.setLocationRelativeTo(null);
             interfaz2.setVisible(true);     
+            if(ConexionMS.getstatus())
+            {                    
+                control.migracion();
+            }else {
+                JOptionPane.showMessageDialog(null, "¡¡¡Usuario Inconrrecto!!!","¡¡¡Error!!!",JOptionPane.ERROR_MESSAGE);
+            }
+            
         }else {
             JOptionPane.showMessageDialog(null, "¡¡¡Usuario Inconrrecto!!!","¡¡¡Error!!!",JOptionPane.ERROR_MESSAGE);
             

@@ -23,6 +23,8 @@ public class ControladorPrincipal {
     private Statement statement;
     private Connection connection;
     private int numero_partido = 0;
+    private Statement statementMS;
+    private Connection connectionMS;
     //private DefaultTableModel tabla;
     private int quienGanoPartido;
     private String codigoEquipo;
@@ -1267,6 +1269,40 @@ public class ControladorPrincipal {
         posicion++;
     }
 
+    //MIGRA LA TABLA EQUIPOS DE MS A ORACLE
+    public void migracion()
+    {
+        try{
+            //Hago conexion ORACLE
+            connection = Conexion.getConexion();
+            statement = connection.createStatement();
+            //Hago conexion MS
+            connectionMS = ConexionMS.getCon();
+            statementMS = connectionMS.createStatement();
+            //se deshabilita el modo de confirmación automática
+            connection.setAutoCommit(false);
+            connectionMS.setAutoCommit(false);
+            //Obtengo gf eq1
+            String consulta1 = "SELECT * FROM EQUIPO";
+            output = statementMS.executeQuery(consulta1);
+            connectionMS.commit();
+            while (output.next()) {
+                String query = "INSERT INTO EQUIPO VALUES ('"+output.getString(1)+"','"+output.getString(2)+
+                        "','"+output.getString(3)+"','"+output.getString(4)+"')";
+                statement.executeUpdate(query);
+            }
+            connection.commit();
+            connectionMS.commit();
+            //se habilita el modo de confirmación automática
+            connection.setAutoCommit(true);
+            connectionMS.setAutoCommit(true);
+        }catch(SQLException ex){
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+        
+    }
+    
+    
     //Funcion inserto partido
     //Return 1 si hay un error o 0 si está correcto
     public int cargarEquipos(String equipo1, String equipo2, String nombreEstadio, String cantAficionados, String tiempoExtra,
