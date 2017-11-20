@@ -401,7 +401,6 @@ public class ControladorPrincipal {
     }
 
     //---------Funciones----------
-    
     //Crea un nuevo equipo en la tabla Equipo
     public void crearEquipo(String codEquipo, String nombrePais, String grupoInicial, String codigoConfederacion) throws SQLException {
         //Da formato a los strings
@@ -853,6 +852,59 @@ public class ControladorPrincipal {
         }
     }
 
+    //Operacion informe de partidos
+    public void queryInformePartidos(String numPartido) {
+        try {
+            //Hago conexion
+            connection = Conexion.getConexion();
+            statement = connection.createStatement();
+
+            //Crea el query
+            String query = "SELECT * FROM PARTIDO";
+            //Si se especifica un equipo
+            if (!numPartido.equals("")) {
+                query += "WHERE NUMERO_PARTIDO = " + numPartido;
+            }
+            query += " ORDER BY NUMERO_PARTIDO";
+
+            //Ejecuto el query
+            output = statement.executeQuery(query);
+
+            //Obtengo los metadatos y nombres de columnas
+            metaDatos = output.getMetaData();
+            int index = metaDatos.getColumnCount();
+            Vector nombreColumnas = new Vector();
+            for (int i = 1; i <= index; i++) {
+                nombreColumnas.add(metaDatos.getColumnLabel(i));
+            }
+
+            String confederacionActual = ""; //Usado para imprimir en pantalla
+
+            //Obtengo las tuplas en un vector que contiene vectores
+            Vector filas = new Vector();
+            while (output.next()) {
+                //Imprime en pantalla
+                if (confederacionActual.equals("") || !confederacionActual.equals(output.getString(1))) {
+                    System.out.println(output.getString(1));
+                    confederacionActual = output.getString(1);
+                }
+                System.out.println("    " + output.getString(2));
+                //Añado al vector de datos
+                Vector tupla = new Vector();
+                for (int i = 1; i <= index; i++) {
+                    tupla.add(output.getString(i));
+                }
+                filas.add(tupla);
+            }
+
+            //Muestro los resultados
+            DefaultTableModel modelo = (DefaultTableModel) ventanaPrincipal.tablaQuerysPrincipal.getModel();
+            modelo.setDataVector(filas, nombreColumnas);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al realizar la consulta");
+        }
+    }
+    
     //INSERTO EN LA TABLA CUERPO_ARBITRAL USANDO UNA TRANSACCION
     public void ejecutarArbitro(String pasaportePrinc, String pasaporteAsis1, String pasaporteAsis2, String pasaporteCuarto, String pasaporteQuinto) throws SQLException {
         //Hago conexion
@@ -925,8 +977,7 @@ public class ControladorPrincipal {
                 JOptionPane.showMessageDialog(null, "El equipo 1 ya realizó 3 cambios.");
                 return 1;
             }
-        }
-        else {
+        } else {
             int cambiosEq2 = Integer.parseInt(interfazPartidos.cambiosHechosEq2.getText());
             if (cambiosEq2 < 3) {
                 //Aumento cambio
@@ -1338,8 +1389,12 @@ public class ControladorPrincipal {
     }
 
     //----------------------Informacion del partido---------------------------
-    public void infoPartido() {
+    public void infoPartido(String parametro) {
         JOptionPane.showMessageDialog(null, "ACABAS DE HACER LA CONSULTA: INFORME OFICIAL DEL PARTIDO");
+        interfazInformePartido interfaz = new interfazInformePartido();
+        interfaz.setLocationRelativeTo(null);
+        interfaz.setVisible(true);
+        queryInformePartidos(parametro);
     }
 
     //----------------------Informacion del campeonato, grupo clasificatoria----
@@ -1369,7 +1424,7 @@ public class ControladorPrincipal {
                     equiposCof(parametro);
                     break;
                 case "INFORME OFICIAL DEL PARTIDO":
-                    infoPartido();
+                    infoPartido(parametro);
                     break;
                 case "GRUPOS Y CLASIFICACIONES":
                     grupoClasificaciones();
