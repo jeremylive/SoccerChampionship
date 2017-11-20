@@ -1,10 +1,11 @@
 package proyecto2;
 //Bibliotecas a usar
+
 import java.awt.BorderLayout;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
-import javax.swing.JComboBox;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -13,26 +14,24 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author live
  */
-public class ventanaPrincipal extends javax.swing.JFrame 
-{
+public class ventanaPrincipal extends javax.swing.JFrame {
+
     //Variables globales
     ControladorPrincipal controlador;
-    
+
     //Constructor
-    public ventanaPrincipal(ControladorPrincipal control) 
-    {
+    public ventanaPrincipal(ControladorPrincipal control) {
         initComponents();
         //this.tablaQuerysPrincipal.setModel(new DefaultTableModel());
         backGro back = new backGro();
         this.add(back, BorderLayout.CENTER);
-        this.pack();  
-        
+        this.pack();
+
         this.controlador = control;
     }
-    
+
     //Funciones
-    public String getOpciones()
-    {
+    public String getOpciones() {
         return opciones.getSelectedItem().toString();
     }
 
@@ -43,8 +42,6 @@ public class ventanaPrincipal extends javax.swing.JFrame
     public void setTablaQuerysPrincipal(JTable tablaQuerysPrincipal) {
         this.tablaQuerysPrincipal = tablaQuerysPrincipal;
     }
-    
-    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -115,6 +112,11 @@ public class ventanaPrincipal extends javax.swing.JFrame
         crudPartido1.setBackground(new java.awt.Color(51, 51, 255));
         crudPartido1.setFont(new java.awt.Font("MS Gothic", 1, 12)); // NOI18N
         crudPartido1.setText("DICCIONARIO");
+        crudPartido1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                crudPartido1ActionPerformed(evt);
+            }
+        });
 
         tablaQuerysPrincipal.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -203,17 +205,17 @@ public class ventanaPrincipal extends javax.swing.JFrame
         pack();
     }// </editor-fold>//GEN-END:initComponents
     private void ejecutarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ejecutarActionPerformed
-        controlador.logicaVentanaPrincipal(getOpciones(), parametro.getText());      
+        controlador.logicaVentanaPrincipal(getOpciones(), parametro.getText());
     }//GEN-LAST:event_ejecutarActionPerformed
     private void opcionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcionesActionPerformed
     }//GEN-LAST:event_opcionesActionPerformed
     private void salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirActionPerformed
-        dispose();  
+        dispose();
     }//GEN-LAST:event_salirActionPerformed
     private void crudPartidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crudPartidoActionPerformed
         crudPartido interfaz = new crudPartido(controlador);
         interfaz.setLocationRelativeTo(null);
-        interfaz.setVisible(true); 
+        interfaz.setVisible(true);
     }//GEN-LAST:event_crudPartidoActionPerformed
 
     private void crudEquipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crudEquipoActionPerformed
@@ -232,6 +234,14 @@ public class ventanaPrincipal extends javax.swing.JFrame
             }
         }
     }//GEN-LAST:event_ayudaActionPerformed
+
+    private void crudPartido1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crudPartido1ActionPerformed
+        try {
+            controlador.consultaDD(parametro.getText());
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al consultar el Diccionario de Datos");
+        }
+    }//GEN-LAST:event_crudPartido1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ayuda;
