@@ -18,19 +18,19 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Jurgenn
  */
-public class interfazEquipo_RUD extends javax.swing.JFrame {
+public class interfazPartido_RUD extends javax.swing.JFrame {
 
     ControladorPrincipal control;
-    Vector<String> copiaCodigosEquipo;
+    Vector<Integer> copiaCodigosPartido;
 
     /**
      * Creates new form interfazEquipo_RUD
      *
      * @param control
      */
-    public interfazEquipo_RUD(ControladorPrincipal control) {
+    public interfazPartido_RUD(ControladorPrincipal control) {
         initComponents();
-        cargarEquipos();
+        cargarPartidos();
         this.control = control;
     }
 
@@ -45,10 +45,10 @@ public class interfazEquipo_RUD extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        rudEquipo_tabla = new javax.swing.JTable();
-        rudEquipo_actualizar = new javax.swing.JButton();
-        rudEquipo_borrar = new javax.swing.JButton();
-        rudEquipo_salir = new javax.swing.JButton();
+        rudPartido_tabla = new javax.swing.JTable();
+        rudPartido_actualizar = new javax.swing.JButton();
+        rudPartido_borrar = new javax.swing.JButton();
+        rudPartido_salir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -56,7 +56,7 @@ public class interfazEquipo_RUD extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Interfaz Equipo Read, Update y Delete");
 
-        rudEquipo_tabla.setModel(new javax.swing.table.DefaultTableModel(
+        rudPartido_tabla.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -67,26 +67,26 @@ public class interfazEquipo_RUD extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(rudEquipo_tabla);
+        jScrollPane1.setViewportView(rudPartido_tabla);
 
-        rudEquipo_actualizar.setText("Actualizar");
-        rudEquipo_actualizar.addActionListener(new java.awt.event.ActionListener() {
+        rudPartido_actualizar.setText("Actualizar");
+        rudPartido_actualizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rudEquipo_actualizarActionPerformed(evt);
+                rudPartido_actualizarActionPerformed(evt);
             }
         });
 
-        rudEquipo_borrar.setText("Borrar");
-        rudEquipo_borrar.addActionListener(new java.awt.event.ActionListener() {
+        rudPartido_borrar.setText("Borrar");
+        rudPartido_borrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rudEquipo_borrarActionPerformed(evt);
+                rudPartido_borrarActionPerformed(evt);
             }
         });
 
-        rudEquipo_salir.setText("Salir");
-        rudEquipo_salir.addActionListener(new java.awt.event.ActionListener() {
+        rudPartido_salir.setText("Salir");
+        rudPartido_salir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rudEquipo_salirActionPerformed(evt);
+                rudPartido_salirActionPerformed(evt);
             }
         });
 
@@ -101,11 +101,11 @@ public class interfazEquipo_RUD extends javax.swing.JFrame {
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addGap(105, 105, 105)
-                .addComponent(rudEquipo_actualizar)
+                .addComponent(rudPartido_actualizar)
                 .addGap(136, 136, 136)
-                .addComponent(rudEquipo_borrar)
+                .addComponent(rudPartido_borrar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(rudEquipo_salir)
+                .addComponent(rudPartido_salir)
                 .addGap(127, 127, 127))
         );
         layout.setVerticalGroup(
@@ -116,26 +116,26 @@ public class interfazEquipo_RUD extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(rudEquipo_actualizar)
-                    .addComponent(rudEquipo_borrar)
-                    .addComponent(rudEquipo_salir))
+                    .addComponent(rudPartido_actualizar)
+                    .addComponent(rudPartido_borrar)
+                    .addComponent(rudPartido_salir))
                 .addGap(0, 27, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void cargarEquipos() {
+    private void cargarPartidos() {
         try {
             //Inicializa el vector con codigos de equipo
-            copiaCodigosEquipo = new Vector<>();
+            copiaCodigosPartido = new Vector<>();
 
             //Hago conexion
             Connection connection = Conexion.getConexion();
             Statement statement = connection.createStatement();
 
             //Realiza el query
-            String query = "SELECT * FROM EQUIPO";
+            String query = "SELECT * FROM PARTIDO";
             ResultSet output = statement.executeQuery(query);
 
             //Obtengo los metadatos y nombres de columnas
@@ -155,47 +155,53 @@ public class interfazEquipo_RUD extends javax.swing.JFrame {
                     tupla.add(output.getString(i));
                 }
                 filas.add(tupla);
-                copiaCodigosEquipo.add((String) tupla.get(0));
+                copiaCodigosPartido.add(Integer.parseInt((String) tupla.get(0)));
             }
 
             //Muestro los resultados
-            DefaultTableModel modelo = (DefaultTableModel) this.rudEquipo_tabla.getModel();
+            DefaultTableModel modelo = (DefaultTableModel) this.rudPartido_tabla.getModel();
             modelo.setDataVector(filas, nombreColumnas);
 
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Error al cargar la tabla de Equipos");
+            JOptionPane.showMessageDialog(null, "Error al cargar la tabla de Partidos");
         }
     }
 
-    private void rudEquipo_salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rudEquipo_salirActionPerformed
+    private void rudPartido_salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rudPartido_salirActionPerformed
         this.dispose();
-    }//GEN-LAST:event_rudEquipo_salirActionPerformed
+    }//GEN-LAST:event_rudPartido_salirActionPerformed
 
-    private void rudEquipo_actualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rudEquipo_actualizarActionPerformed
+    private void rudPartido_actualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rudPartido_actualizarActionPerformed
         try {
-            control.actualizarEquipo(copiaCodigosEquipo.get(rudEquipo_tabla.getSelectedRow()),
-                    (String) rudEquipo_tabla.getModel().getValueAt(rudEquipo_tabla.getSelectedRow(), 1),
-                    (String) rudEquipo_tabla.getModel().getValueAt(rudEquipo_tabla.getSelectedRow(), 2),
-                    (String) rudEquipo_tabla.getModel().getValueAt(rudEquipo_tabla.getSelectedRow(), 3));
-            this.cargarEquipos();
-            JOptionPane.showMessageDialog(null, "Equipo actualizado correctamente");
+            control.actualizarPartido(copiaCodigosPartido.get(rudPartido_tabla.getSelectedRow()),
+                    (String) rudPartido_tabla.getModel().getValueAt(rudPartido_tabla.getSelectedRow(), 1),
+                    (String) rudPartido_tabla.getModel().getValueAt(rudPartido_tabla.getSelectedRow(), 2),
+                    (String) rudPartido_tabla.getModel().getValueAt(rudPartido_tabla.getSelectedRow(), 3),
+                    Integer.parseInt((String) rudPartido_tabla.getModel().getValueAt(rudPartido_tabla.getSelectedRow(), 4)),
+                    Integer.parseInt((String) rudPartido_tabla.getModel().getValueAt(rudPartido_tabla.getSelectedRow(), 5)),
+                    Integer.parseInt((String) rudPartido_tabla.getModel().getValueAt(rudPartido_tabla.getSelectedRow(), 6)),
+                    (String) rudPartido_tabla.getModel().getValueAt(rudPartido_tabla.getSelectedRow(), 7),
+                    (String) rudPartido_tabla.getModel().getValueAt(rudPartido_tabla.getSelectedRow(), 8),
+                    (String) rudPartido_tabla.getModel().getValueAt(rudPartido_tabla.getSelectedRow(), 9));
+            this.cargarPartidos();
+            JOptionPane.showMessageDialog(null, "Partido actualizado correctamente");
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Error al actualizar el equipo");
+            JOptionPane.showMessageDialog(null, "Error al actualizar el partido");
         }
-    }//GEN-LAST:event_rudEquipo_actualizarActionPerformed
+    }//GEN-LAST:event_rudPartido_actualizarActionPerformed
 
-    private void rudEquipo_borrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rudEquipo_borrarActionPerformed
-        control.borrarEquipo((String) rudEquipo_tabla.getModel().getValueAt(rudEquipo_tabla.getSelectedRow(), 0));
-        this.cargarEquipos();
-    }//GEN-LAST:event_rudEquipo_borrarActionPerformed
+    private void rudPartido_borrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rudPartido_borrarActionPerformed
+        control.borrarPartido(Integer.parseInt((String) rudPartido_tabla.getModel().getValueAt(rudPartido_tabla.getSelectedRow(), 0)));
+        this.cargarPartidos();
+    }//GEN-LAST:event_rudPartido_borrarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JButton rudEquipo_actualizar;
-    private javax.swing.JButton rudEquipo_borrar;
-    private javax.swing.JButton rudEquipo_salir;
-    private javax.swing.JTable rudEquipo_tabla;
+    private javax.swing.JButton rudPartido_actualizar;
+    private javax.swing.JButton rudPartido_borrar;
+    private javax.swing.JButton rudPartido_salir;
+    private javax.swing.JTable rudPartido_tabla;
     // End of variables declaration//GEN-END:variables
 }
